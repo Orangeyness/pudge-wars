@@ -2,13 +2,14 @@
 #define _INTRO_STATE_
 
 #include "GameStateInterface.h"
+#include "GameEntityInterface.h"
+#include "EntityPool.h"
 #include "GameEngine.h"
 
 class IntroState : public GameStateInterface
 {
 	private:
-		int x;
-		int y;
+		EntityPool m_EntityPool;
 
 	public:
 		IntroState();

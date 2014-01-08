@@ -16,16 +16,21 @@ class GameEngine
 
 		// State
 		long m_FrameCount;
+		int m_FrameCountThisSecond;
+		double m_LastFrameRate;
+		double m_LastSecondTime;
 		bool m_GameActive;
 		std::stack<GameStateInterface*> m_StateStack;
 
 		// Allegro controls
 		ALLEGRO_DISPLAY* 		m_Display;
 		ALLEGRO_EVENT_QUEUE* 	m_EventQueue;
-		ALLEGRO_TIMER* 			m_Timer;		
+		ALLEGRO_TIMER* 			m_RedrawTimer;		
 
 		// Helpers
 		GameStateInterface* getCurrentState();
+
+		void calculateFrameRate();
 
 	public: 
 		GameEngine();
