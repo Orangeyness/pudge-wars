@@ -3,12 +3,14 @@
 
 #include "GameStateInterface.h"
 #include "GameEntityInterface.h"
+#include "UserInputProxy.h"
 #include "EntityPool.h"
 #include "GameEngine.h"
 
 class IntroState : public GameStateInterface
 {
 	private:
+		UserInputProxy m_UserInput;
 		EntityPool m_EntityPool;
 
 	public:

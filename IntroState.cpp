@@ -5,7 +5,7 @@
 
 IntroState::IntroState()
 {
-	m_EntityPool.add(new PudgeEntity());
+	m_EntityPool.add(new PudgeEntity(&m_UserInput));
 }
 
 IntroState::~IntroState()
@@ -17,7 +17,17 @@ void IntroState::resume() { }
 
 void IntroState::update(GameEngine* game)
 {
+	ALLEGRO_KEYBOARD_STATE keyboardState;
+	ALLEGRO_MOUSE_STATE mouseState;
+
+	al_get_keyboard_state(&keyboardState);	
+	al_get_mouse_state(&mouseState);
+
+	m_UserInput.update(&keyboardState, &mouseState);
 	m_EntityPool.updateAll();
+
+	if (m_EntityPool.empty())
+		game->quit();
 }
 
 void IntroState::draw(GameEngine* game)

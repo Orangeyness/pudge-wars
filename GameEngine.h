@@ -42,6 +42,8 @@ class GameEngine
 		void pushState(GameStateInterface* state);
 		void popState();
 		void changeState(GameStateInterface* state);
+		void quit();
+	
 
 		void log(std::string msg);
 

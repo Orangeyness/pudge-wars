@@ -2,15 +2,18 @@
 #define _PUDGE_ENTITY_
 
 #include "GameEntityInterface.h"
+#include "InputProxyInterface.h"
 
 class PudgeEntity : public GameEntityInterface
 {
 	private:
-		int x;
-		int y;
+		InputProxyInterface* m_Input;
+		Vector2D m_HookTarget;
+		double x;
+		double y;
 
 	public:
-		PudgeEntity();
+		PudgeEntity(InputProxyInterface* input);
 		virtual entityrtn_t update();
 		virtual void draw();
 

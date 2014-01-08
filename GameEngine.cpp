@@ -42,6 +42,16 @@ void GameEngine::initialise()
 		throw GameException(EXCEP_ALLEG_ENGINE_FAILED);
 	}	
 
+	if (!al_install_keyboard())
+	{
+		throw GameException(EXCEP_ALLEG_KEYBOARD_FAILED);
+	}
+
+	if (!al_install_mouse())
+	{
+		throw GameException(EXCEP_ALLEG_MOUSE_FAILED);
+	}
+
 	//Temporary Display Options
 	al_set_new_display_flags(ALLEGRO_OPENGL);
 	al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
@@ -72,6 +82,7 @@ void GameEngine::initialise()
 
 	al_register_event_source(m_EventQueue, al_get_display_event_source(m_Display));
 	al_register_event_source(m_EventQueue, al_get_timer_event_source(m_RedrawTimer));
+	al_register_event_source(m_EventQueue, al_get_keyboard_event_source());
 }
 
 void GameEngine::run()
@@ -93,12 +104,14 @@ void GameEngine::run()
 				m_GameActive = false;
 				break;
 
+			case ALLEGRO_EVENT_KEY_DOWN:
+				if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+					m_GameActive = false;
+				break;
+
 			case ALLEGRO_EVENT_TIMER:
 				redrawScene = true;
 				break;
-
-			default:
-				log(std::string("Unhandled Event | type #") + std::to_string(event.type));
 		}
 		
 		if (redrawScene && al_is_event_queue_empty(m_EventQueue))
@@ -150,6 +163,11 @@ void GameEngine::changeState(GameStateInterface* state)
 	m_StateStack.pop();
 	
 	m_StateStack.push(state);
+}
+
+void GameEngine::quit()
+{
+	m_GameActive = false;
 }
 
 GameStateInterface* GameEngine::getCurrentState()

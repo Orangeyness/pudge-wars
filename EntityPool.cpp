@@ -26,9 +26,14 @@ int EntityPool::updateAll()
 		entityrtn_t rtn = currentEntity->update();
 
 		if (rtn == ENTITY_DELETE)
-			m_EntityList.erase(it);
+		{
+			delete currentEntity;
+			it = m_EntityList.erase(it);
+		}
 		else
+		{
 			it ++;
+		}
 	}
 
 	return m_EntityList.size();
