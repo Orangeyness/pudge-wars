@@ -12,7 +12,7 @@ class Vector2D
 		double magnitude();
 		void normalise();
 
-		static Vector2D fromDirection(double direction);
+		//static Vector2D fromDirection(double direction);
 };
 
 #endif

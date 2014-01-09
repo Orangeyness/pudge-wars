@@ -28,7 +28,7 @@ GameEngine::~GameEngine()
 	if (m_EventQueue) al_destroy_event_queue(m_EventQueue);
 
 	// Cleanup State stack
-	while(m_StateStack.empty())
+	while(!m_StateStack.empty())
 	{
 		delete m_StateStack.top();
 		m_StateStack.pop();

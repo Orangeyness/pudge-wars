@@ -22,14 +22,15 @@ double Vector2D::toDirection()
 	return std::atan2(y, x);
 }
 
+/*
 static Vector2D fromDirection(double direction)
 {
-	Vector2D v (1, tan(direction));
+	Vector2D v (cos(direction), sin(direction));
 
 	v.normalise();
 
 	return v;
-}
+}*/
 
 double Vector2D::magnitude()
 {
