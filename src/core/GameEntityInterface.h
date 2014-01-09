@@ -1,17 +1,26 @@
 #ifndef _GAME_ENTITY_INTERFACE_
 #define _GAME_ENTITY_INTERFACE_
 
-typedef bool entityrtn_t;
+typedef bool EntityStatus;
 
-#define ENTITY_KEEP true
-#define ENTITY_DELETE false
+#define ENTITY_ALIVE true
+#define ENTITY_DEAD false
 
 class GameEntityInterface
 {
+	private:
+		int m_EntityId;
+
 	public:
-		virtual entityrtn_t update() { return ENTITY_KEEP; }
+		GameEntityInterface();
+		virtual EntityStatus update();
 		virtual void draw() = 0;
 		virtual ~GameEntityInterface() {}
+
+		virtual int id();
+
+		static int IdIndex;
+		
 };
 
 

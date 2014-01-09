@@ -46,3 +46,11 @@ void Vector2D::normalise()
 	x /= m;
 	y /= m;
 }
+
+double Vector2D::sqauredEuclideanDist(const Vector2D& other)
+{
+	double xDiff = x - other.x;
+	double yDiff = y - other.y;
+	
+	return (xDiff * xDiff) + (yDiff * yDiff);
+}

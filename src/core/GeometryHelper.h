@@ -12,6 +12,7 @@ class Vector2D
 		double magnitude();
 		void normalise();
 
+		double sqauredEuclideanDist(const Vector2D& other);
 		//static Vector2D fromDirection(double direction);
 };
 

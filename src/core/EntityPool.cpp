@@ -7,36 +7,62 @@ EntityPool::~EntityPool()
 
 void EntityPool::add(GameEntityInterface* entity)
 {
-	m_EntityList.push_back(entity);
+	m_EntityList.push_front(entity);
+}
+
+void EntityPool::add(CollidableEntityInterface* entity)
+{
+	m_EntityList.push_front(entity);
+	m_CollidableEntityMap[entity->id()] = entity;
 }
 
 void EntityPool::remove(GameEntityInterface* entity)
 {
 	m_EntityList.remove(entity);
+
+	m_CollidableEntityMap.erase(entity->id());
+}
+
+std::unordered_map<int, CollidableEntityInterface*>::const_iterator EntityPool::collidableBegin()
+{
+	return m_CollidableEntityMap.cbegin();
+}
+
+std::unordered_map<int, CollidableEntityInterface*>::const_iterator EntityPool::collidableEnd()
+{
+	return m_CollidableEntityMap.cend();
 }
 
 int EntityPool::updateAll() 
 {
 	auto it = m_EntityList.begin();
+	auto prevIt = m_EntityList.before_begin();
+
+	int entityCount = 0;
 
 	while (it != m_EntityList.end())
 	{
 		GameEntityInterface* currentEntity = *it;
 
-		entityrtn_t rtn = currentEntity->update();
+		EntityStatus rtn = currentEntity->update();
 
-		if (rtn == ENTITY_DELETE)
+		it ++;
+
+		if (rtn == ENTITY_DEAD)
 		{
+			m_EntityList.erase_after(prevIt);
+			m_CollidableEntityMap.erase(currentEntity->id());
+
 			delete currentEntity;
-			it = m_EntityList.erase(it);
 		}
 		else
 		{
-			it ++;
+			entityCount ++;
+			prevIt ++;
 		}
 	}
 
-	return m_EntityList.size();
+	return entityCount;
 }
 
 void EntityPool::drawAll()
@@ -65,9 +91,4 @@ void EntityPool::clean()
 bool EntityPool::empty()
 {
 	return m_EntityList.empty();
-}
-
-int EntityPool::entityCount()
-{
-	return m_EntityList.size();
 }

@@ -1,21 +1,21 @@
 #ifndef _PUDGE_ENTITY_
 #define _PUDGE_ENTITY_
 
-#include "../core/GameEntityInterface.h"
+#include "../core/CollidableEntityInterface.h"
 
 #include "InputProxyInterface.h"
 
-class PudgeEntity : public GameEntityInterface
+class PudgeEntity : public CollidableEntityInterface
 {
 	private:
 		InputProxyInterface* m_Input;
 		Vector2D m_HookTarget;
-		double x;
-		double y;
+
+		EntityStatus processEvents();
 
 	public:
 		PudgeEntity(InputProxyInterface* input);
-		virtual entityrtn_t update();
+		virtual EntityStatus update();
 		virtual void draw();
 
 };
