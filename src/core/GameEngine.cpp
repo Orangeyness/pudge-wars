@@ -4,7 +4,7 @@
 GameEngine::GameEngine()
 {
 	// Settings
-	m_TargetFramesPerSecond = 70;
+	m_TargetFramesPerSecond = 60;
 	
 	// State
 	m_FrameCount = 0;
@@ -200,7 +200,7 @@ void GameEngine::calculateFrameRate()
 		m_LastSecondTime = currentTime;
 		m_FrameCountThisSecond = 0;
 
-		std::cout 	<< "\rFrame Rate: " << m_LastFrameRate 
-					<< " (Total: " << m_FrameCount << ")" << std::flush;
+		std::cout 	<< "Frame Rate: " << m_LastFrameRate 
+					<< " (Total: " << m_FrameCount << ")" << std::endl;
 	}
 }

@@ -1,7 +1,8 @@
 #ifndef _PUDGE_ENTITY_
 #define _PUDGE_ENTITY_
 
-#include "GameEntityInterface.h"
+#include "../core/GameEntityInterface.h"
+
 #include "InputProxyInterface.h"
 
 class PudgeEntity : public GameEntityInterface

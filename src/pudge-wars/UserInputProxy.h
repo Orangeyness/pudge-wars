@@ -1,8 +1,8 @@
 #ifndef _USER_INPUT_PROXY_
 #define _USER_INPUT_PROXY_
 
+#include "../core/GeometryHelper.h"
 #include "InputProxyInterface.h"
-#include "GeometryHelper.h"
 
 #include <allegro5/allegro.h>
 

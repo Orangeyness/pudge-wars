@@ -1,9 +1,10 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "GameEngine.h"
-#include "GameException.h"
-#include "IntroState.h"
+#include "core/GameEngine.h"
+#include "core/GameException.h"
+
+#include "pudge-wars/IntroState.h"
 
 int main(int argc, char* argv[])
 {

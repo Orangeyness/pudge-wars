@@ -1,7 +1,7 @@
 #ifndef _INPUT_PROXY_
 #define _INPUT_PROXY_
 
-#include "GeometryHelper.h"
+#include "../core/GeometryHelper.h"
 
 class InputProxyInterface
 {

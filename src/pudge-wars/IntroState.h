@@ -1,11 +1,11 @@
 #ifndef _INTRO_STATE_
 #define _INTRO_STATE_
 
-#include "GameStateInterface.h"
-#include "GameEntityInterface.h"
+#include "../core/GameStateInterface.h"
+#include "../core/GameEntityInterface.h"
+#include "../core/EntityPool.h"
+#include "../core/GameEngine.h"
 #include "UserInputProxy.h"
-#include "EntityPool.h"
-#include "GameEngine.h"
 
 class IntroState : public GameStateInterface
 {
