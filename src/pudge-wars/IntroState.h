@@ -1,5 +1,5 @@
-#ifndef _INTRO_STATE_
-#define _INTRO_STATE_
+#ifndef H_INTRO_STATE_
+#define H_INTRO_STATE_
 
 #include "../core/GameStateInterface.h"
 #include "../core/GameEntityInterface.h"

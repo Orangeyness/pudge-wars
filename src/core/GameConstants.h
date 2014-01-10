@@ -1,5 +1,5 @@
-#ifndef _GAME_CONSTANTS_
-#define _GAME_CONSTANTS_
+#ifndef H_GAME_CONSTANTS_
+#define H_GAME_CONSTANTS_
 
 /***************** EXCEPTIONS ********************/
 

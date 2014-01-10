@@ -1,5 +1,5 @@
-#ifndef _PUDGE_ENTITY_
-#define _PUDGE_ENTITY_
+#ifndef H_PUDGE_ENTITY_
+#define H_PUDGE_ENTITY_
 
 #include "../core/CollidableEntityInterface.h"
 

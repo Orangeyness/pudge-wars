@@ -1,5 +1,5 @@
-#ifndef _GAME_DEBUG_WINDOW_
-#define _GAME_DEBUG_WINDOW_
+#ifndef H_GAME_DEBUG_WINDOW_
+#define H_GAME_DEBUG_WINDOW_
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>

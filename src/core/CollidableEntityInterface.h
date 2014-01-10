@@ -1,5 +1,5 @@
-#ifndef _COLLIDABLE_ENTITY_INTERFACE_
-#define _COLLIDABLE_ENTITY_INTERFACE_
+#ifndef H_COLLIDABLE_ENTITY_INTERFACE_
+#define H_COLLIDABLE_ENTITY_INTERFACE_
 
 #include "GameEntityInterface.h"
 #include "GeometryHelper.h"

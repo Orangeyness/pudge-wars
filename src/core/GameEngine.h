@@ -1,5 +1,5 @@
-#ifndef _GAME_ENGINE_
-#define _GAME_ENGINE_
+#ifndef H_GAME_ENGINE_
+#define H_GAME_ENGINE_
 
 #include "GameStateInterface.h"
 

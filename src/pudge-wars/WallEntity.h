@@ -1,5 +1,5 @@
-#ifndef _WALL_ENTITY_
-#define _WALL_ENTITY_
+#ifndef H_WALL_ENTITY_
+#define H_WALL_ENTITY_
 
 #include "../core/CollidableEntityInterface.h"
 #include "../core/GeometryHelper.h"

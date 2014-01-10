@@ -1,5 +1,5 @@
-#ifndef _INPUT_PROXY_
-#define _INPUT_PROXY_
+#ifndef H_INPUT_PROXY_
+#define H_INPUT_PROXY_
 
 #include "../core/GeometryHelper.h"
 

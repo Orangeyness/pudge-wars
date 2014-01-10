@@ -1,5 +1,5 @@
-#ifndef _GEOMETRY_HELPER_
-#define _GEOMETRY_HELPER_
+#ifndef H_GEOMETRY_HELPER_
+#define H_GEOMETRY_HELPER_
 
 #include <cmath>
 

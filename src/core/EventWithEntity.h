@@ -1,5 +1,5 @@
-#ifndef _EVENT_WITH_ENTITY_
-#define _EVENT_WITH_ENTITY_
+#ifndef H_EVENT_WITH_ENTITY_
+#define H_EVENT_WITH_ENTITY_
 
 #include "Observer.h"
 #include "GameEntityInterface.h"

@@ -1,5 +1,5 @@
-#ifndef _ENTITY_POOL_
-#define _ENTITY_POOL_
+#ifndef H_ENTITY_POOL_
+#define H_ENTITY_POOL_
 
 #include "GameEntityInterface.h"
 #include "CollidableEntityInterface.h"

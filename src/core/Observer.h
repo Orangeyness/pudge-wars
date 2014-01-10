@@ -1,5 +1,5 @@
-#ifndef _OBSERVER_
-#define _OBSERVER_
+#ifndef H_OBSERVER_
+#define H_OBSERVER_
 
 #include <forward_list>
 

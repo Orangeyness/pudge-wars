@@ -1,5 +1,5 @@
-#ifndef _GAME_EXCEPTION_
-#define _GAME_EXCEPTION_
+#ifndef H_GAME_EXCEPTION_
+#define H_GAME_EXCEPTION_
 
 #include "GameConstants.h"
 

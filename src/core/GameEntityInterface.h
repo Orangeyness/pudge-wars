@@ -1,5 +1,5 @@
-#ifndef _GAME_ENTITY_INTERFACE_
-#define _GAME_ENTITY_INTERFACE_
+#ifndef H_GAME_ENTITY_INTERFACE_
+#define H_GAME_ENTITY_INTERFACE_
 
 
 typedef bool EntityStatus;

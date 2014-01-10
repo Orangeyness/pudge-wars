@@ -1,5 +1,5 @@
-#ifndef _GAME_STATE_INTERFACE_
-#define _GAME_STATE_INTERFACE_
+#ifndef H_GAME_STATE_INTERFACE_
+#define H_GAME_STATE_INTERFACE_
 
 class GameEngine;
 
