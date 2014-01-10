@@ -1,5 +1,6 @@
 #include "Observer.h"
 
+// Base Event
 ObservableEvent::ObservableEvent(EventType type)
 {
 	m_Type = type;
@@ -15,6 +16,16 @@ ObservableEvent* Observer::eventTop()
 	return m_EventList.front();
 }
 
+// Observer
+
+Observer::~Observer()
+{
+	while (hasEvents())
+	{
+		eventPop();
+	}
+}
+
 void Observer::eventPop()
 {
 	ObservableEvent* top = m_EventList.front();
@@ -26,7 +37,11 @@ void Observer::eventPop()
 
 void Observer::notify(ObservableEvent* event)
 {
-	if (m_Deaf) return;
+	if (m_Deaf)
+	{
+		delete event;
+		return;
+	}
 
 	m_EventList.push_front(event);
 }

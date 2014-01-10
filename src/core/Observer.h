@@ -29,6 +29,7 @@ class Observer
 		void receiveEvents();
 
 	public:
+		virtual ~Observer();
 		void notify(ObservableEvent* event);
 };
 
