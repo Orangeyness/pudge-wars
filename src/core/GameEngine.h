@@ -4,6 +4,7 @@
 #include "GameStateInterface.h"
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
 
 #include <iostream>
 #include <stack>
@@ -44,9 +45,6 @@ class GameEngine
 		void changeState(GameStateInterface* state);
 		void quit();
 	
-
-		void log(std::string msg);
-
 		ALLEGRO_BITMAP* screen();
 };
 

@@ -3,6 +3,7 @@
 #include "WallEntity.h"
 
 #include "../core/GameConstants.h"
+#include "../core/GameDebugWindow.h"
 #include "../core/GeometryHelper.h"
 #include "../core/EventWithEntity.h"
 
@@ -59,6 +60,8 @@ void IntroState::update(GameEngine* game)
 
 	// Update all entities
 	m_EntityPool.updateAll();
+
+	DEBUG_SHOW("DEBUG MAIN", "Entities Alive", std::to_string(GameEntityInterface::AliveCount()), 1);
 
 	if (m_EntityPool.empty())
 		game->quit();

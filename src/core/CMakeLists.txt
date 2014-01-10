@@ -1,6 +1,7 @@
 set(ENGINE_FILES 
 	GameEngine.cpp 
 	GameException.cpp 
+	GameDebugWindow.cpp
 	GameEntityInterface.cpp
 	EntityPool.cpp 
 	GeometryHelper.cpp 

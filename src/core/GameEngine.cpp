@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "GameException.h"
+#include "GameDebugWindow.h"
 
 GameEngine::GameEngine()
 {
@@ -41,6 +42,11 @@ void GameEngine::initialise()
 	{
 		throw GameException(EXCEP_ALLEG_ENGINE_FAILED);
 	}	
+
+	if (!al_init_font_addon())
+	{
+		throw GameException(EXCEP_ALLEG_FONT_FAILED);
+	}
 
 	if (!al_install_keyboard())
 	{
@@ -93,6 +99,8 @@ void GameEngine::run()
 	m_LastSecondTime = al_current_time();
 	bool redrawScene = true;
 
+	DEBUG_WINDOW("DEBUG MAIN", 300, 180);
+
 	while(m_GameActive)
 	{
 		ALLEGRO_EVENT event;
@@ -125,6 +133,8 @@ void GameEngine::run()
 			calculateFrameRate();
 
 			redrawScene = false;
+
+			DEBUG_REFRESH_ALL();
 		}
 	}
 
@@ -178,11 +188,6 @@ GameStateInterface* GameEngine::getCurrentState()
 	return m_StateStack.top();
 }
 
-void GameEngine::log(std::string msg)
-{
-	std::cout << std::endl << "debug log: " << msg << std::endl;
-}
-
 ALLEGRO_BITMAP* GameEngine::screen()
 {
 	return al_get_backbuffer(m_Display);
@@ -200,7 +205,7 @@ void GameEngine::calculateFrameRate()
 		m_LastSecondTime = currentTime;
 		m_FrameCountThisSecond = 0;
 
-		std::cout 	<< "Frame Rate: " << m_LastFrameRate 
-					<< " (Total: " << m_FrameCount << ")" << std::endl;
+		DEBUG_SHOW("DEBUG MAIN", "Frame Rate", std::to_string(m_LastFrameRate));
+		DEBUG_SHOW("DEBUG MAIN", "Frame Total", std::to_string(m_FrameCount));
 	}
 }
