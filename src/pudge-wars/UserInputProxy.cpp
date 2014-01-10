@@ -34,8 +34,6 @@ void UserInputProxy::update(const ALLEGRO_KEYBOARD_STATE* keyboardState, const A
 		m_MoveDirection.y += 1;
 	}	
 
-	m_MoveDirection.normalise();
-
 	m_HasHookTarget = false;
 	if (mouseState->buttons & 1)
 	{
@@ -59,9 +57,9 @@ bool UserInputProxy::hasHookTarget()
 	return m_HasHookTarget;
 }
 
-Vector2D UserInputProxy::moveDirection()
+double UserInputProxy::moveDirection()
 {
-	return m_MoveDirection;
+	return m_MoveDirection.toDirection();
 }
 
 Vector2D UserInputProxy::hookTarget()

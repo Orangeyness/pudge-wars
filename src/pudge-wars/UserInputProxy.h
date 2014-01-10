@@ -20,7 +20,7 @@ class UserInputProxy : public InputProxyInterface
 
 		virtual bool hasMoveDirection();
 		virtual bool hasHookTarget();
-		virtual Vector2D moveDirection();
+		virtual double moveDirection();
 		virtual Vector2D hookTarget();
 };
 

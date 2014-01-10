@@ -1,7 +1,7 @@
 #include "GameEngine.h"
 #include "GameStateInterface.h"
 #include "GameException.h"
-#include "ExceptionIds.h"
+#include "GameConstants.h"
 
 #include "gtest/gtest.h"
 

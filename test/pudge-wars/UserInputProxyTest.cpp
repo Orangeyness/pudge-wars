@@ -23,7 +23,7 @@
       (STATE).__key_down__internal__[kc / 32] &= ~(1 << (kc % 32));     \
    } while (0)
 
-
+/*
 TEST(UserInputProxy, NoMoveDirection) {
 	ALLEGRO_KEYBOARD_STATE kbState;
 	ALLEGRO_MOUSE_STATE mState;
@@ -110,4 +110,4 @@ TEST(UserInputProxy, ArrowKeyDirections) {
 	ASSERT_TRUE(uip.hasMoveDirection());
 	ASSERT_EQ(uip.moveDirection().x, 1.0/sqrt(2));
 	ASSERT_EQ(uip.moveDirection().y, -1.0/sqrt(2));
-}
+}*/

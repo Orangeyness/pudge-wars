@@ -2,7 +2,9 @@
 #include "PudgeEntity.h"
 #include "WallEntity.h"
 
+#include "../core/GameConstants.h"
 #include "../core/GeometryHelper.h"
+#include "../core/EventWithEntity.h"
 
 #include <allegro5/allegro.h>
 
@@ -45,8 +47,8 @@ void IntroState::update(GameEngine* game)
 	
 			if (colliderA->isCollidingWith(colliderB))
 			{
-				colliderA->notify(new ObservableEvent(1));
-				colliderB->notify(new ObservableEvent(1));
+				colliderA->notify(new EventWithEntity(EVENT_TYPE_COLLISION, colliderB));
+				colliderB->notify(new EventWithEntity(EVENT_TYPE_COLLISION, colliderA));
 			}
 
 			itB ++;

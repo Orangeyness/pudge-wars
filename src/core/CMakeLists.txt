@@ -6,6 +6,7 @@ set(ENGINE_FILES
 	GeometryHelper.cpp 
 	Observer.cpp 
 	CollidableEntityInterface.cpp
+	EventWithEntity.cpp
 	)
 
 add_library (EngineCore ${ENGINE_FILES})

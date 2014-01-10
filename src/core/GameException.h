@@ -1,7 +1,7 @@
 #ifndef _GAME_EXCEPTION_
 #define _GAME_EXCEPTION_
 
-#include "ExceptionIds.h"
+#include "GameConstants.h"
 
 #include <exception>
 #include <string>

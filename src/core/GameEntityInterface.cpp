@@ -1,8 +1,22 @@
 #include "GameEntityInterface.h"
 
+#include <unordered_map>
+
+static int _EntityCount = 0;
+static int _EntityIdCount = 0;
+static std::unordered_map<int, GameEntityInterface*> _EntityLookUp;
+
 GameEntityInterface::GameEntityInterface()
 {
-	m_EntityId = GameEntityInterface::IdIndex++; 
+	_EntityCount ++;
+	m_EntityId = _EntityIdCount++; 
+
+	_EntityLookUp[m_EntityId] = this;
+}
+
+GameEntityInterface::~GameEntityInterface()
+{
+	_EntityLookUp.erase(m_EntityId);
 }
 
 EntityStatus GameEntityInterface::update()
@@ -15,4 +29,22 @@ int GameEntityInterface::id()
 	return m_EntityId;
 }
 
-int GameEntityInterface::IdIndex = 0;
+int GameEntityInterface::AliveCount()
+{
+	return _EntityCount;
+}
+
+int GameEntityInterface::TotalCount()
+{
+	return _EntityIdCount;
+}
+
+GameEntityInterface* GameEntityInterface::GetAliveById(int id)
+{
+	auto it = _EntityLookUp.find(id);
+	
+	if (it == _EntityLookUp.end()) 
+		return NULL;
+
+	return (*it).second;
+}

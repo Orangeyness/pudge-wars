@@ -1,6 +1,7 @@
 #ifndef _GAME_ENTITY_INTERFACE_
 #define _GAME_ENTITY_INTERFACE_
 
+
 typedef bool EntityStatus;
 
 #define ENTITY_ALIVE true
@@ -15,12 +16,13 @@ class GameEntityInterface
 		GameEntityInterface();
 		virtual EntityStatus update();
 		virtual void draw() = 0;
-		virtual ~GameEntityInterface() {}
+		virtual ~GameEntityInterface();
 
 		virtual int id();
 
-		static int IdIndex;
-		
+		static int AliveCount();
+		static int TotalCount();
+		static GameEntityInterface* GetAliveById(int id);
 };
 
 

@@ -13,6 +13,7 @@ class ObservableEvent
 	public:
 		ObservableEvent(EventType type);
 		EventType getType();
+		virtual ~ObservableEvent() { }
 };
 
 class Observer 

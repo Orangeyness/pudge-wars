@@ -8,6 +8,19 @@
 class PudgeEntity : public CollidableEntityInterface
 {
 	private:
+		double m_DirectionCurrent;
+		double m_DirectionTarget;
+		double m_DirectionTurnRate;
+		double m_SpeedCurrent;
+		double m_SpeedMax;
+		double m_SpeedAcceleration;
+		double m_SpeedDeceleration;
+
+		bool m_HookActive;
+		bool m_HookRecoveryActive;
+		int  m_HookRecoveryTime;
+		int  m_HookRecoveryTimeLeft;
+
 		InputProxyInterface* m_Input;
 		Vector2D m_HookTarget;
 

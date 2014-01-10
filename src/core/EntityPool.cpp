@@ -35,6 +35,8 @@ std::unordered_map<int, CollidableEntityInterface*>::const_iterator EntityPool::
 
 int EntityPool::updateAll() 
 {
+	std::forward_list<GameEntityInterface*> delete_list;
+
 	auto it = m_EntityList.begin();
 	auto prevIt = m_EntityList.before_begin();
 
@@ -53,13 +55,21 @@ int EntityPool::updateAll()
 			m_EntityList.erase_after(prevIt);
 			m_CollidableEntityMap.erase(currentEntity->id());
 
-			delete currentEntity;
+			delete_list.push_front(currentEntity);
 		}
 		else
 		{
 			entityCount ++;
 			prevIt ++;
 		}
+	}
+
+	// Delete any dead entities after all entities 
+	// have been updated.
+	while(!delete_list.empty())
+	{
+		delete delete_list.front();
+		delete_list.pop_front();
 	}
 
 	return entityCount;
