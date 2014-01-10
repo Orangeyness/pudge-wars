@@ -1,4 +1,4 @@
-Hook-Game
+Pudge-Wars
 =========
 Pudge-wars stand alone.
 
