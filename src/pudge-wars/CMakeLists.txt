@@ -4,6 +4,7 @@ set(GAME_FILES
 	UserInputProxy.cpp
 	WallEntity.cpp
 	BallEntity.cpp
+	HookEntity.cpp
 	)
 
 add_library(GameComponents OBJECT ${GAME_FILES})

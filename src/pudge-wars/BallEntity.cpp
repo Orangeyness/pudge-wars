@@ -5,7 +5,7 @@
 
 BallEntity::BallEntity(Vector2D position, double radius)
 {
-	ignoreEvents();
+	startIgnoringEvents();
 
 	m_Position = position;
 	m_Radius = radius;

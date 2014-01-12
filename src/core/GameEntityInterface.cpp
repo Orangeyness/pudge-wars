@@ -16,6 +16,7 @@ GameEntityInterface::GameEntityInterface()
 
 GameEntityInterface::~GameEntityInterface()
 {
+	_EntityCount --;
 	_EntityLookUp.erase(m_EntityId);
 }
 

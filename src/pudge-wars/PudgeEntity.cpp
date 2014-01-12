@@ -2,7 +2,7 @@
 #include "../core/GeometryHelper.h"
 #include "../core/GameConstants.h"
 #include "../core/GameException.h"
-#include "../core/EventWithEntity.h"
+#include "../core/MessageRouter.h"
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
@@ -31,10 +31,10 @@ PudgeEntity::PudgeEntity(InputProxyInterface* input)
 	m_HookRecoveryTimeLeft = 0;
 }
 
+#include <iostream>
+
 EntityStatus PudgeEntity::update()
 {
-	EntityStatus rtn = processEvents();
-
 	// Get new movement input if not throwing a hook.
 	if (m_Input->hasMoveDirection() && !m_HookActive && !m_HookRecoveryActive)
 	{
@@ -93,6 +93,8 @@ EntityStatus PudgeEntity::update()
 
 	if (m_HookActive && m_DirectionCurrent == m_DirectionTarget)
 	{
+		MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_SPAWN_HOOK, new EntityEventArgs(this)));
+
 		m_HookActive = false;
 		m_HookRecoveryTimeLeft = m_HookRecoveryTime;
 		m_HookRecoveryActive = true;
@@ -106,8 +108,7 @@ EntityStatus PudgeEntity::update()
 		m_Position.y += lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
 	}
 		
-
-	return rtn && ENTITY_ALIVE;
+	return ENTITY_ALIVE;
 }
 
 void PudgeEntity::draw()
@@ -128,34 +129,20 @@ void PudgeEntity::draw()
 
 	if (m_HookActive)
 	{
-		al_draw_circle(m_HookTarget.x, m_HookTarget.y, 5, al_map_rgb(0, 250, 0), 1);
 	}
 }
 
-EntityStatus PudgeEntity::processEvents()
+void PudgeEntity::notify(const Event& event)
 {	
-	while (hasEvents())
+	switch(event.getType())
 	{
-		ObservableEvent* event = eventTop();
-
-		switch(event->getType())
-		{
-			case EVENT_TYPE_COLLISION:
-					EventWithEntity* fullEvent = dynamic_cast<EventWithEntity*>(event);
+		case EVENT_TYPE_COLLISION:
+				m_Position.x -= lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
+				m_Position.y -= lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
 		
-					if (!fullEvent) throw GameException(EXCEP_EVENT_WRONG_TYPE);
-
-					GameEntityInterface* entity = GameEntityInterface::GetAliveById(fullEvent->getEntityId());
-	
-					m_Position.x -= lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
-					m_Position.y -= lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
-			
-					m_SpeedCurrent = 0;
-				break;
-		}
-		
-		eventPop();
+				m_SpeedCurrent = 0;
+			break;
 	}
-
-	return ENTITY_ALIVE;
 }
+
+double PudgeEntity::getFacingDirection() { return m_DirectionCurrent; }

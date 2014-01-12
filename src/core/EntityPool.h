@@ -11,6 +11,7 @@ class EntityPool
 {
 	private:
 		std::forward_list<GameEntityInterface*> m_EntityList;
+		std::forward_list<GameEntityInterface*> m_EntityDeadList;
 		std::unordered_map<int, CollidableEntityInterface*> m_CollidableEntityMap;		
 
 	public:
@@ -25,6 +26,7 @@ class EntityPool
 
 		int updateAll();
 		void drawAll();
+		void deleteDead();
 		void clean();
 
 		bool empty();

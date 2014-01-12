@@ -4,13 +4,15 @@ set(ENGINE_FILES
 	GameDebugWindow.cpp
 	GameEntityInterface.cpp
 	EntityPool.cpp 
-	GeometryHelper.cpp 
+	MessageRouter.cpp
 	Observer.cpp 
+	Event.cpp
+	EventArgs.cpp
+	GeometryHelper.cpp 
 	CollidableEntityInterface.cpp
 	BoundingBoxEntityInterface.cpp
 	RadialEntityInterface.cpp
 	CollisionChecker.cpp
-	EventWithEntity.cpp
 	)
 
 add_library (EngineCore ${ENGINE_FILES})

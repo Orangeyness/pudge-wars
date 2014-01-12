@@ -5,7 +5,7 @@
 
 WallEntity::WallEntity(Vector2D position, double width, double height)
 {
-	ignoreEvents();
+	startIgnoringEvents();
 
 	m_Position = position;
 
