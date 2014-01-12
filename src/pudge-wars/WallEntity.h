@@ -1,13 +1,13 @@
 #ifndef H_WALL_ENTITY_
 #define H_WALL_ENTITY_
 
-#include "../core/CollidableEntityInterface.h"
+#include "../core/BoundingBoxEntityInterface.h"
 #include "../core/GeometryHelper.h"
 
-class WallEntity : public CollidableEntityInterface
+class WallEntity : public BoundingBoxEntityInterface
 {
 	public:
-		WallEntity(Vector2D position, double radius);
+		WallEntity(Vector2D position, double width, double height);
 		
 		virtual void draw();
 

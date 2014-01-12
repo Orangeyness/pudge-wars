@@ -1,11 +1,8 @@
 #include "CollidableEntityInterface.h"
 
-bool CollidableEntityInterface::isCollidingWith(CollidableEntityInterface* other)
+CollidableEntityInterface::CollidableEntityInterface()
 {
-	double collisionRange = getRadius() + other->getRadius();
-	double distanceSqaured = getPosition().sqauredEuclideanDist(other->getPosition());
-
- 	return (distanceSqaured <= (collisionRange * collisionRange));
+	m_Solid = true;
 }
 
 Vector2D CollidableEntityInterface::getPosition()
@@ -13,7 +10,7 @@ Vector2D CollidableEntityInterface::getPosition()
 	return m_Position;
 }
 
-double CollidableEntityInterface::getRadius()
-{
-	return m_Radius;
+bool CollidableEntityInterface::isSolid()
+{	
+	return m_Solid;
 }

@@ -1,11 +1,11 @@
 #ifndef H_PUDGE_ENTITY_
 #define H_PUDGE_ENTITY_
 
-#include "../core/CollidableEntityInterface.h"
+#include "../core/RadialEntityInterface.h"
 
 #include "InputProxyInterface.h"
 
-class PudgeEntity : public CollidableEntityInterface
+class PudgeEntity : public RadialEntityInterface
 {
 	private:
 		double m_DirectionCurrent;

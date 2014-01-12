@@ -7,6 +7,9 @@ set(ENGINE_FILES
 	GeometryHelper.cpp 
 	Observer.cpp 
 	CollidableEntityInterface.cpp
+	BoundingBoxEntityInterface.cpp
+	RadialEntityInterface.cpp
+	CollisionChecker.cpp
 	EventWithEntity.cpp
 	)
 

@@ -4,21 +4,21 @@
 #include "GameEntityInterface.h"
 #include "GeometryHelper.h"
 #include "Observer.h"
+#include "GameDebugWindow.h"
+
+typedef int CollidableType;
 
 class CollidableEntityInterface : public GameEntityInterface, public virtual Observer
 {
 	protected:
-		double m_Radius;
 		Vector2D m_Position;
-
+		bool m_Solid;
+	
 	public:
-		CollidableEntityInterface() : GameEntityInterface() {}
-		virtual void draw() = 0;
-
-		virtual bool isCollidingWith(CollidableEntityInterface* other);
-		
+		CollidableEntityInterface();
+		virtual CollidableType getType() = 0;
+		virtual bool isSolid();
 		virtual Vector2D getPosition();
-		virtual double getRadius();
 };
 
 

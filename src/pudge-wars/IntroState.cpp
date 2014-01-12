@@ -1,10 +1,12 @@
 #include "IntroState.h"
 #include "PudgeEntity.h"
 #include "WallEntity.h"
+#include "BallEntity.h"
 
 #include "../core/GameConstants.h"
 #include "../core/GameDebugWindow.h"
 #include "../core/GeometryHelper.h"
+#include "../core/CollisionChecker.h"
 #include "../core/EventWithEntity.h"
 
 #include <allegro5/allegro.h>
@@ -12,7 +14,8 @@
 IntroState::IntroState()
 {
 	m_EntityPool.add(new PudgeEntity(&m_UserInput));
-	m_EntityPool.add(new WallEntity(Vector2D(350, 300), 15));
+	m_EntityPool.add(new BallEntity(Vector2D(350, 300), 15));
+	m_EntityPool.add(new WallEntity(Vector2D(20, 20), 300, 50));
 }
 
 IntroState::~IntroState()
@@ -46,7 +49,7 @@ void IntroState::update(GameEngine* game)
 		{
 			CollidableEntityInterface* colliderB = (*itB).second;
 	
-			if (colliderA->isCollidingWith(colliderB))
+			if (CollisionChecker::isColliding(colliderA, colliderB))
 			{
 				colliderA->notify(new EventWithEntity(EVENT_TYPE_COLLISION, colliderB));
 				colliderB->notify(new EventWithEntity(EVENT_TYPE_COLLISION, colliderA));

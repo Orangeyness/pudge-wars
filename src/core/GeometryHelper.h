@@ -40,10 +40,41 @@ class Vector2D
 
 		double directionToPoint(double otherX, double otherY);
 		double directionToPoint(const Vector2D& other);
+		Vector2D manhattanDist(const Vector2D& other);
 		double euclideanDist(const Vector2D& other);
 		double sqauredEuclideanDist(const Vector2D& other);
 
 		static Vector2D fromDirection(double direction);
+};
+
+class Rect
+{
+	public:
+		double x, y, width, height;
+
+		Rect();
+		Rect(double _x, double _y, double _width, double _height);
+		Rect(const Vector2D& point1, const Vector2D& point2);
+				
+		void resize(double width, double height);
+		void position(const Vector2D& point);
+		void position(const Vector2D& point, double offsetX, double offsetY);
+		void position(const Vector2D& point, const Vector2D& offset);
+
+		Vector2D center() const;
+		double area() const;
+
+		double top() const;
+		double bot() const;
+		double left() const;
+		double right() const;
+
+		bool contains(double x, double y);
+		bool contains(const Vector2D& point);
+		bool intersects(const Rect& r);
+		bool intersects(const Vector2D& circleCenter, double radius);
+
+
 };
 
 #endif

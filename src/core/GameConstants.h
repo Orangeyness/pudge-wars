@@ -22,8 +22,14 @@
 // Event Problems
 #define EXCEP_EVENT_WRONG_TYPE			0x02000030
 
-/***************** EXCEPTIONS ********************/
+/******************* EVENTS **********************/
 
 #define EVENT_TYPE_COLLISION			0x10000000
+
+
+/********* COLLISION IDENTIFIER TYPES ************/
+
+#define COLLISION_CHECK_BBOX			0x20000001
+#define COLLISION_CHECK_RADIAL			0x20000002
 
 #endif

@@ -11,7 +11,6 @@
 #include <iostream>
 
 PudgeEntity::PudgeEntity(InputProxyInterface* input) 
-  : CollidableEntityInterface()
 {
 	m_Input = input;	
 	m_HookTarget.set(-1, -1);
