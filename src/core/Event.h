@@ -3,7 +3,7 @@
 
 #include "EventArgs.h"
 
-typedef int EventType;
+typedef unsigned int EventType;
 
 class Event 
 {

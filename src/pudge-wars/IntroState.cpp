@@ -25,13 +25,15 @@ IntroState::IntroState()
 
 IntroState::~IntroState()
 {
+	m_EntityPool.clean();
+
 	m_MessageRouter.deregisterListener(this);
 }
 
 void IntroState::pause() { }
 void IntroState::resume() { }
 
-void IntroState::notify(const Event& event)
+void IntroState::processEvent(const Event& event)
 {
 	switch(event.getType())
 	{
@@ -40,14 +42,14 @@ void IntroState::notify(const Event& event)
 			EntityEventArgs* args = dynamic_cast<EntityEventArgs*>(event.getArgs());
 
 			if (args == NULL) 
-				throw GameException(EXCEP_EVENT_WRONG_ARGTYPE);			
+				THROW_GAME_EXCEPTION(EXCEP_EVENT_WRONG_ARGTYPE);			
 
 			PudgeEntity* pudga = dynamic_cast<PudgeEntity*>(args->getEntity());
 
 			if (pudga == NULL)
-				throw GameException(EXCEP_UNEXPECTED_ENTITY_TYPE);
+				THROW_GAME_EXCEPTION(EXCEP_UNEXPECTED_ENTITY_TYPE);
 
-			m_EntityPool.add(new HookEntity(pudga->getPosition(), pudga->getFacingDirection(), -10, 120));
+			m_EntityPool.add(new HookEntity(pudga->id(), pudga->getPosition(), pudga->getFacingDirection(), -10, 120));
 		break;
 	}
 }
@@ -97,8 +99,8 @@ void IntroState::detectCollisions()
 	
 			if (CollisionChecker::isColliding(colliderA, colliderB))
 			{
-				m_MessageRouter.directMessage(colliderA, Event(EVENT_TYPE_COLLISION));
-				m_MessageRouter.directMessage(colliderB, Event(EVENT_TYPE_COLLISION));
+				m_MessageRouter.directMessage(colliderA, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderB)));
+				m_MessageRouter.directMessage(colliderB, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderA)));
 			}
 
 			itB ++;

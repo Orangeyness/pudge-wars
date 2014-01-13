@@ -40,22 +40,22 @@ void GameEngine::initialise()
 {
 	if (!al_init())
 	{
-		throw GameException(EXCEP_ALLEG_ENGINE_FAILED);
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_ENGINE_FAILED);
 	}	
 
 	if (!al_init_font_addon())
 	{
-		throw GameException(EXCEP_ALLEG_FONT_FAILED);
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_FONT_FAILED);
 	}
 
 	if (!al_install_keyboard())
 	{
-		throw GameException(EXCEP_ALLEG_KEYBOARD_FAILED);
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_KEYBOARD_FAILED);
 	}
 
 	if (!al_install_mouse())
 	{
-		throw GameException(EXCEP_ALLEG_MOUSE_FAILED);
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_MOUSE_FAILED);
 	}
 
 	//Temporary Display Options
@@ -71,19 +71,19 @@ void GameEngine::initialise()
 	m_Display = al_create_display(640, 480);
 	if (!m_Display)
 	{
-		throw GameException(EXCEP_ALLEG_DISPLAY_FAILED);
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_DISPLAY_FAILED);
 	}
 
 	m_RedrawTimer = al_create_timer(ALLEGRO_BPS_TO_SECS(m_TargetFramesPerSecond));
 	if (!m_RedrawTimer)
 	{
-		throw GameException(EXCEP_ALLEG_TIMER_FAILED);
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_TIMER_FAILED);
 	}
 
 	m_EventQueue = al_create_event_queue();
 	if (!m_EventQueue)
 	{
-		throw GameException(EXCEP_ALLEG_EQUEUE_FAILED);
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_EQUEUE_FAILED);
 	}
 
 	al_register_event_source(m_EventQueue, al_get_display_event_source(m_Display));
@@ -153,7 +153,7 @@ void GameEngine::pushState(GameStateInterface* state)
 void GameEngine::popState()
 {
 	if (m_StateStack.empty())
-		throw GameException(EXCEP_STATE_UNEXPECTED_EMPTY);
+		THROW_GAME_EXCEPTION(EXCEP_STATE_UNEXPECTED_EMPTY);
 
 	delete m_StateStack.top();
 	m_StateStack.pop();
@@ -167,7 +167,7 @@ void GameEngine::popState()
 void GameEngine::changeState(GameStateInterface* state)
 {
 	if (m_StateStack.empty())
-		throw GameException(EXCEP_STATE_UNEXPECTED_EMPTY);
+		THROW_GAME_EXCEPTION(EXCEP_STATE_UNEXPECTED_EMPTY);
 
 	delete m_StateStack.top();
 	m_StateStack.pop();
@@ -183,7 +183,7 @@ void GameEngine::quit()
 GameStateInterface* GameEngine::getCurrentState()
 {
 	if (m_StateStack.empty())
-		throw GameException(EXCEP_STATE_UNEXPECTED_EMPTY);
+		THROW_GAME_EXCEPTION(EXCEP_STATE_UNEXPECTED_EMPTY);
 	
 	return m_StateStack.top();
 }

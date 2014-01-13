@@ -3,8 +3,6 @@
 
 #include "Event.h"
 
-#include <forward_list>
-
 class Observer 
 {
 	private:
@@ -17,7 +15,8 @@ class Observer
 	public:
 		virtual ~Observer() {}
 		bool isDeaf();
-		virtual void notify(const Event& event) { }
+		virtual void notify(const Event& event);
+		virtual void processEvent(const Event& event) { }
 };
 
 

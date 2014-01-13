@@ -20,6 +20,7 @@
 
 #define DEG_TO_RAD(x) (x * (M_PI / 180))
 #define RAD_TO_DEG(x) (x * (180 / M_PI))
+#define SQRD(x) (x * x)
 
 // Base Helper Functions
 double point_distance(double x1, double y1, double x2, double y2);
@@ -33,6 +34,7 @@ class Vector2D
 		double x, y;
 		Vector2D();
 		Vector2D(double _x, double _y);
+		Vector2D(double direction);
 		void set(double _x, double _y);
 		double toDirection();
 		double magnitude();
@@ -43,8 +45,6 @@ class Vector2D
 		Vector2D manhattanDist(const Vector2D& other);
 		double euclideanDist(const Vector2D& other);
 		double sqauredEuclideanDist(const Vector2D& other);
-
-		static Vector2D fromDirection(double direction);
 };
 
 class Rect

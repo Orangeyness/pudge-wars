@@ -1,18 +1,22 @@
 #include "MessageRouter.h"
 #include "GameConstants.h"
 #include "GameException.h"
+#include "GameDebugWindow.h"
 
 static MessageRouter* _instance = NULL;
 
 MessageRouter* MessageRouter::Instance()
 {
+	if (_instance == NULL)
+		THROW_GAME_EXCEPTION(EXCEP_MISSING_MESSAGE_ROUTER);
+
 	return _instance;
 }
 
 MessageRouter::MessageRouter()
 {
 	if (_instance != NULL)
-		throw GameException(EXCEP_MULTIPLE_MESSAGE_ROUTERS);
+		THROW_GAME_EXCEPTION(EXCEP_MULTIPLE_MESSAGE_ROUTERS);
 
 	_instance = this;
 }
@@ -49,11 +53,6 @@ void MessageRouter::directMessage(Observer* recipant, const Event& event)
 	m_DirectEvents.emplace_front(recipant, event);
 }
 
-inline void notifyObserver(Observer* obs, const Event& event)
-{
-	if (!obs->isDeaf()) obs->notify(event);
-}
-
 inline void cleanupEventArgs(const Event& event)
 {
 	EventArgs* args = event.getArgs();
@@ -62,6 +61,11 @@ inline void cleanupEventArgs(const Event& event)
 
 void MessageRouter::doRoute()
 {
+	#ifdef DEBUG
+	int directMessageCount = 0;
+	int broadcastMessageCount = 0;
+	#endif
+
 	auto directIter = m_DirectEvents.cbegin();
 	auto directIterOrigBegin = m_DirectEvents.cbefore_begin();
 
@@ -73,10 +77,14 @@ void MessageRouter::doRoute()
 		Observer* recipant = (*directIter).first;
 		Event event = (*directIter).second;
 
-		notifyObserver(recipant, event);
+		recipant->notify(event);
 
 		cleanupEventArgs(event);
 		directIter ++;
+		
+		#ifdef DEBUG
+		directMessageCount ++;
+		#endif
 	}
 	
 	m_DirectEvents.erase_after(directIterOrigBegin, m_DirectEvents.cend());
@@ -87,15 +95,28 @@ void MessageRouter::doRoute()
 
 		for (auto& ObserverMaskPair : m_Listeners)
 		{
-			if (ObserverMaskPair.second & event.getType()) 
+			/*std::cout << int_to_hex_string(ObserverMaskPair.second) << " | "
+					  << int_to_hex_string(event.getType()) << " | "
+					  << int_to_hex_string(ObserverMaskPair.second & event.getType())
+					  << std::endl;*/
+	
+			if ((ObserverMaskPair.second & event.getType()) == event.getType()) 
 			{
-				notifyObserver(ObserverMaskPair.first, event);
+				ObserverMaskPair.first->notify(event);
 			}
 		}
 
 		cleanupEventArgs(event);
 		broadcastIter ++;
+
+		#ifdef DEBUG
+		broadcastMessageCount ++;
+		#endif
 	}
 
 	m_BroadcastEvents.erase_after(broadcastIterOrigBegin, m_BroadcastEvents.cend());
+
+	DEBUG_SHOW("DEBUG MAIN", "direct events", std::to_string(directMessageCount));
+	DEBUG_SHOW("DEBUG MAIN", "broadcast events", std::to_string(broadcastMessageCount));
+	DEBUG_SHOW("DEBUG MAIN", "total events", std::to_string(directMessageCount + broadcastMessageCount));
 }

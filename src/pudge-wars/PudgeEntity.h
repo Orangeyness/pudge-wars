@@ -30,7 +30,7 @@ class PudgeEntity : public RadialEntityInterface
 		PudgeEntity(InputProxyInterface* input);
 		virtual EntityStatus update();
 		virtual void draw();
-		virtual void notify(const Event& event);
+		virtual void processEvent(const Event& event);
 
 		double getFacingDirection();
 };

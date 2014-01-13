@@ -45,6 +45,11 @@ Vector2D::Vector2D(double _x, double _y)
 	set(_x, _y);
 }
 
+Vector2D::Vector2D(double direction)
+{
+	set( lengthdir_x(1, direction) , lengthdir_y(1, direction) );
+}
+
 void Vector2D::set(double _x, double _y)
 {
 	x = _x;
@@ -54,12 +59,6 @@ void Vector2D::set(double _x, double _y)
 double Vector2D::toDirection()
 {
 	return std::atan2(-y, x);
-}
-
-
-static Vector2D fromDirection(double direction)
-{
-	return Vector2D( lengthdir_x(1, direction) , lengthdir_y(1, direction) );
 }
 
 double Vector2D::magnitude()

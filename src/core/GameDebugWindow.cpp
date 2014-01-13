@@ -9,7 +9,7 @@ GameDebugWindow::GameDebugWindow(std::string name, int width, int height)
 	ALLEGRO_BITMAP* prevTargetBitmap = al_get_target_bitmap();
 	
 	if (_NameToWindowMap[name] != NULL)
-		throw GameException(EXCEP_DEBUG_WINDOW_EXISTS);
+		THROW_GAME_EXCEPTION(EXCEP_DEBUG_WINDOW_EXISTS);
 
 	_NameToWindowMap[name] = this;
 	m_WindowName = name;
@@ -19,7 +19,7 @@ GameDebugWindow::GameDebugWindow(std::string name, int width, int height)
 	
 	if (!m_Display)
 	{
-		throw GameException(EXCEP_ALLEG_DISPLAY_FAILED);
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_DISPLAY_FAILED);
 	}
 	
 	al_set_window_title(m_Display, m_WindowName.c_str()); 
@@ -99,7 +99,7 @@ void GameDebugWindow::refresh()
 GameDebugWindow* GameDebugWindow::GetByName(std::string name)
 {
 	if (_NameToWindowMap[name] == NULL)
-		throw GameException(EXCEP_DEBUG_WINDOW_MISSING);
+		THROW_GAME_EXCEPTION(EXCEP_DEBUG_WINDOW_MISSING);
 
 	return _NameToWindowMap[name];
 }

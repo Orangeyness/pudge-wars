@@ -16,6 +16,7 @@ class IntroState : public GameStateInterface, public Observer
 		EntityPool m_EntityPool;
 		MessageRouter m_MessageRouter;
 
+		void detectCollisions();
 	public:
 		IntroState();
 		virtual ~IntroState();
@@ -24,10 +25,8 @@ class IntroState : public GameStateInterface, public Observer
 		virtual void resume();
 		
 		virtual void update(GameEngine* game);
-		void detectCollisions();
-
 		virtual void draw(GameEngine* game);
-		virtual void notify(const Event& event);
+		virtual void processEvent(const Event& event);
 };
 
 #endif

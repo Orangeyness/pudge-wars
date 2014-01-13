@@ -1,5 +1,6 @@
 set(ENGINE_FILES 
 	GameEngine.cpp 
+	GameConstants.cpp
 	GameException.cpp 
 	GameDebugWindow.cpp
 	GameEntityInterface.cpp

@@ -106,6 +106,8 @@ EntityStatus PudgeEntity::update()
 	{
 		m_Position.x += lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
 		m_Position.y += lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
+
+		MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
 	}
 		
 	return ENTITY_ALIVE;
@@ -126,13 +128,9 @@ void PudgeEntity::draw()
 					m_Position.y + lengthdir_y(m_Radius * 1.2, m_DirectionTarget),
 					al_map_rgb(0, 125, 0), 3
 				);
-
-	if (m_HookActive)
-	{
-	}
 }
 
-void PudgeEntity::notify(const Event& event)
+void PudgeEntity::processEvent(const Event& event)
 {	
 	switch(event.getType())
 	{

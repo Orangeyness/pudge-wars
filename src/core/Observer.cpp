@@ -17,3 +17,8 @@ bool Observer::isDeaf()
 {
 	return m_Deaf;
 }
+
+void Observer::notify(const Event& event)
+{
+	if (!isDeaf()) processEvent(event);
+}
