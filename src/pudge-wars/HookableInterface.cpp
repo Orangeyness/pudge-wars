@@ -44,18 +44,22 @@ HookableInterface::HookObserver::~HookObserver()
 
 void HookableInterface::HookObserver::processEvent(const Event& event)
 {
-
-	EntityEventArgs* args = dynamic_cast<EntityEventArgs*>(event.getArgs());
-	if (args == NULL) THROW_GAME_EXCEPTION(EXCEP_EVENT_WRONG_ARGTYPE);
+	// All entity events should have EntityEventArg type or a descent
+	EntityEventArgs* args = event.getArgs<EntityEventArgs*>();
 	
 	switch(event.getType())
 	{
 		case EVENT_TYPE_HOOK_ATTACH:
 		{
+			/*
+				Check if the attach event is calling us out by id.
+				If so attach it if not already attached to a hook otherwise
+				call attachSecondHookBehaviour to determine what happens.
+			*/
 			if (m_Parent.id() != args->getEntityId()) break;
 
-			DoubleEntityEventArgs* dArgs = dynamic_cast<DoubleEntityEventArgs*>(event.getArgs());
-			if (dArgs == NULL) THROW_GAME_EXCEPTION(EXCEP_EVENT_WRONG_ARGTYPE);
+			DoubleEntityEventArgs* dArgs = event.getArgs<DoubleEntityEventArgs*>();
+
 			int newHookId = dArgs->getSecondEntityId();
 			if (m_Parent.m_HookEntityId == newHookId) break;
 
@@ -73,6 +77,9 @@ void HookableInterface::HookObserver::processEvent(const Event& event)
 
 		case EVENT_TYPE_HOOK_DETACH:
 		{
+			/* 
+				Tells us we're now detached from the hook.
+			*/
 			if (m_Parent.m_HookEntityId == args->getEntityId())
 			{
 				m_Parent.dettachHook();
@@ -83,10 +90,12 @@ void HookableInterface::HookObserver::processEvent(const Event& event)
 
 		case EVENT_TYPE_ENTITY_MOVE:
 		{
+			/*
+				Check if it is the hook that moved, if so moveToHook
+			*/
 			if (m_Parent.m_HookEntityId == args->getEntityId())
 			{
-				EntityPositionEventArgs* args = dynamic_cast<EntityPositionEventArgs*>(event.getArgs());
-				if (args == NULL) THROW_GAME_EXCEPTION(EXCEP_EVENT_WRONG_ARGTYPE);
+				EntityPositionEventArgs* args = event.getArgs<EntityPositionEventArgs*>();
 	
 				m_Parent.moveToHook(args->getPosition());
 			}

@@ -1,4 +1,3 @@
-#include <cstddef>
 #include "Event.h"
 
 Event::Event(EventType type)
@@ -22,3 +21,4 @@ EventArgs* Event::getArgs() const
 {
 	return m_Args;
 }
+

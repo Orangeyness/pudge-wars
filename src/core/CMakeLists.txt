@@ -16,5 +16,4 @@ set(ENGINE_FILES
 	CollisionChecker.cpp
 	)
 
-add_library (EngineCore ${ENGINE_FILES})
-target_link_libraries(EngineCore ${ALLEGRO_LIBRARIES})
+add_library(EngineCore OBJECT ${ENGINE_FILES})

@@ -37,20 +37,14 @@ void IntroState::processEvent(const Event& event)
 {
 	switch(event.getType())
 	{
-
 		case EVENT_TYPE_SPAWN_HOOK:
-			EntityEventArgs* args = dynamic_cast<EntityEventArgs*>(event.getArgs());
-
-			if (args == NULL) 
-				THROW_GAME_EXCEPTION(EXCEP_EVENT_WRONG_ARGTYPE);			
-
-			PudgeEntity* pudga = dynamic_cast<PudgeEntity*>(args->getEntity());
-
-			if (pudga == NULL)
-				THROW_GAME_EXCEPTION(EXCEP_UNEXPECTED_ENTITY_TYPE);
+		{
+			EntityEventArgs* args = event.getArgs<EntityEventArgs*>();
+			PudgeEntity* pudga = args->getEntity<PudgeEntity*>();
 
 			m_EntityPool.add(new HookEntity(pudga->id(), pudga->getPosition(), pudga->getFacingDirection(), -10, 120));
-		break;
+			break;
+		}
 	}
 }
 

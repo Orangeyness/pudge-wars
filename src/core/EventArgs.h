@@ -19,6 +19,18 @@ class EntityEventArgs : public EventArgs
 		EntityEventArgs(GameEntityInterface* entity);
 		GameEntityInterface* getEntity() const;
 		int getEntityId() const;
+
+		template<typename T> 
+		T getEntity() const
+		{
+			return getEntity()->toType<T>();
+		}
+
+		template<typename T> 
+		T tryGetEntity() const
+		{
+			return getEntity()->tryToType<T>();
+		}
 };
 
 class DoubleEntityEventArgs : public EntityEventArgs
@@ -30,6 +42,18 @@ class DoubleEntityEventArgs : public EntityEventArgs
 		DoubleEntityEventArgs(GameEntityInterface* entity, GameEntityInterface* secondEntity);
 		GameEntityInterface* getSecondEntity() const;
 		int getSecondEntityId() const;
+
+		template<typename T> 
+		T getSecondEntity() const
+		{
+			return getSecondEntity()->toType<T>();
+		}
+
+		template<typename T> 
+		T tryGetSecondEntity() const
+		{
+			return getSecondEntity()->tryToType<T>();
+		}
 		
 };
 

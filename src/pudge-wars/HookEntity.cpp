@@ -70,39 +70,53 @@ void HookEntity::processEvent(const Event& event)
 	{
 		case EVENT_TYPE_COLLISION:
 		{
-			EntityEventArgs* args = dynamic_cast<EntityEventArgs*>(event.getArgs());
-			if (args == NULL) THROW_GAME_EXCEPTION(EXCEP_EVENT_WRONG_ARGTYPE);
+			/*
+				On collision check if entity is hookable or not, if the entity is hookable 
+				generate a hook attach event with its id and and our id.
+
+				Otherwise bounce off the object.
+			*/
+			EntityEventArgs* args = event.getArgs<EntityEventArgs*>();
+				
+			// Ensure we're not colliding with our parent pudge.
 			if (args->getEntityId() == m_ParentId) break;
 
-			HookableInterface* hookable = dynamic_cast<HookableInterface*>(args->getEntity());
-			if (hookable != NULL)
+			// Check if hookable
+			HookableInterface* hookableEntity = args->tryGetEntity<HookableInterface*>();
+			if (hookableEntity)
 			{
-				MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_HOOK_ATTACH, new DoubleEntityEventArgs(hookable, this)));
+				MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_HOOK_ATTACH, new DoubleEntityEventArgs(hookableEntity, this)));
+			
+				// Turn solid off, so the hook doesn't collide with anything else
 				m_Solid = false;
+				break;
 			}
-			else
+	
+			// Otherwise we're bouncing off the object
+			CollidableEntityInterface* entity = args->getEntity<CollidableEntityInterface*>();
+
+			// Calculate new direction
+			m_Direction = CollisionChecker::calculateReflectAngle(entity, m_Position, m_Direction);
+
+			// Add the bounce point to the tail list
+			if (m_Position.sqauredEuclideanDist(m_TailList.front()) > SQRD(20))
 			{
-				CollidableEntityInterface* entity = dynamic_cast<CollidableEntityInterface*>(args->getEntity());
-				if (entity == NULL) THROW_GAME_EXCEPTION(EXCEP_UNEXPECTED_ENTITY_TYPE);
-
-				m_Direction = CollisionChecker::calculateReflectAngle(entity, m_Position, m_Direction);
-
-				if (m_Position.sqauredEuclideanDist(m_TailList.front()) > SQRD(20))
-				{
-					m_TailList.push_front(m_Position);
-				}
-
-				m_Position.x -= lengthdir_x(m_Speed, m_Direction);
-				m_Position.y -= lengthdir_y(m_Speed, m_Direction);
+				m_TailList.push_front(m_Position);
 			}
 
+			// Update position
+			m_Position.x -= lengthdir_x(m_Speed, m_Direction);
+			m_Position.y -= lengthdir_y(m_Speed, m_Direction);
 			break;
 		}
 
 		case EVENT_TYPE_ENTITY_MOVE:
 		{
-			EntityPositionEventArgs* args = dynamic_cast<EntityPositionEventArgs*>(event.getArgs());
-			if (args == NULL) THROW_GAME_EXCEPTION(EXCEP_EVENT_WRONG_ARGTYPE);			
+			/*
+				We want the hook chain to be connected to its parent pudge at all times
+				so increase its tail when pudge moves.
+			*/
+			EntityPositionEventArgs* args = event.getArgs<EntityPositionEventArgs*>();
 
 			if (args->getEntityId() == m_ParentId)
 			{

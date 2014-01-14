@@ -1,6 +1,8 @@
 #ifndef H_GAME_CONSTANTS_
 #define H_GAME_CONSTANTS_
 
+#include <cstddef>
+
 /***************** EXCEPTIONS ********************/
 
 // Allegro

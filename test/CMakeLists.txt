@@ -86,14 +86,12 @@ endif()
 
 target_link_libraries(
     TestEngine
-	EngineCore 
 	${ALLEGRO_LIBRARIES}
     debug ${binary_dir}/DebugLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}
     optimized ${binary_dir}/ReleaseLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}
     ${Pthread})
 target_link_libraries(
     Test${CMAKE_PROJECT_NAME}
-	EngineCore 
 	${ALLEGRO_LIBRARIES}
     debug ${binary_dir}/DebugLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}
     optimized ${binary_dir}/ReleaseLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}
