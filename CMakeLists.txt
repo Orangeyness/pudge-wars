@@ -13,4 +13,4 @@ find_package(Allegro5 REQUIRED)
 include_directories(${ALLEGRO_INCLUDE_DIRS})
 
 add_subdirectory (src)
-add_subdirectory (test)
+#add_subdirectory (test)
