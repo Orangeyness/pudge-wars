@@ -1,5 +1,7 @@
 #include "HookEntity.h"
 
+#include "HookableInterface.h"
+
 #include "../core/GameConstants.h"
 #include "../core/GameException.h"
 #include "../core/MessageRouter.h"
@@ -34,8 +36,12 @@ EntityStatus HookEntity::update()
 	m_Position.x -= lengthdir_x(m_Speed, m_Direction);
 	m_Position.y -= lengthdir_y(m_Speed, m_Direction);
 
+	MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
+
 	if (m_LifeRemaining > 0)
 		return ENTITY_ALIVE;
+
+	MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_HOOK_DETACH, new EntityEventArgs(this)));
 
 	return ENTITY_DEAD;
 }
@@ -58,8 +64,6 @@ void HookEntity::draw()
 	}
 }
 
-#include <iostream>
-
 void HookEntity::processEvent(const Event& event)
 {
 	switch(event.getType())
@@ -69,18 +73,28 @@ void HookEntity::processEvent(const Event& event)
 			EntityEventArgs* args = dynamic_cast<EntityEventArgs*>(event.getArgs());
 			if (args == NULL) THROW_GAME_EXCEPTION(EXCEP_EVENT_WRONG_ARGTYPE);
 			if (args->getEntityId() == m_ParentId) break;
-			CollidableEntityInterface* entity = dynamic_cast<CollidableEntityInterface*>(args->getEntity());
-			if (entity == NULL) THROW_GAME_EXCEPTION(EXCEP_UNEXPECTED_ENTITY_TYPE);
 
-			m_Direction = CollisionChecker::calculateReflectAngle(entity, m_Position, m_Direction);
-
-			if (m_Position.sqauredEuclideanDist(m_TailList.front()) > SQRD(20))
+			HookableInterface* hookable = dynamic_cast<HookableInterface*>(args->getEntity());
+			if (hookable != NULL)
 			{
-				m_TailList.push_front(m_Position);
+				MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_HOOK_ATTACH, new DoubleEntityEventArgs(hookable, this)));
+				m_Solid = false;
 			}
+			else
+			{
+				CollidableEntityInterface* entity = dynamic_cast<CollidableEntityInterface*>(args->getEntity());
+				if (entity == NULL) THROW_GAME_EXCEPTION(EXCEP_UNEXPECTED_ENTITY_TYPE);
 
-			m_Position.x -= lengthdir_x(m_Speed, m_Direction);
-			m_Position.y -= lengthdir_y(m_Speed, m_Direction);
+				m_Direction = CollisionChecker::calculateReflectAngle(entity, m_Position, m_Direction);
+
+				if (m_Position.sqauredEuclideanDist(m_TailList.front()) > SQRD(20))
+				{
+					m_TailList.push_front(m_Position);
+				}
+
+				m_Position.x -= lengthdir_x(m_Speed, m_Direction);
+				m_Position.y -= lengthdir_y(m_Speed, m_Direction);
+			}
 
 			break;
 		}

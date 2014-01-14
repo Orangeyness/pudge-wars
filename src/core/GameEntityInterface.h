@@ -6,6 +6,7 @@ typedef bool EntityStatus;
 
 #define ENTITY_ALIVE true
 #define ENTITY_DEAD false
+#define ENTITY_ID_NULL -1
 
 class GameEntityInterface
 {

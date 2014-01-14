@@ -5,6 +5,7 @@ set(GAME_FILES
 	WallEntity.cpp
 	BallEntity.cpp
 	HookEntity.cpp
+	HookableInterface.cpp
 	)
 
 add_library(GameComponents OBJECT ${GAME_FILES})

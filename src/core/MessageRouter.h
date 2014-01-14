@@ -5,14 +5,15 @@
 #include "GameEntityInterface.h"
 
 #include <vector>
+#include <list>			//TODO: optimize with custom forward_list
 #include <forward_list>
 #include <utility>
 
 class MessageRouter
 {
 	protected:
-		std::forward_list<Event> m_BroadcastEvents;
-		std::forward_list<std::pair<Observer*, Event>> m_DirectEvents;
+		std::list<Event> m_BroadcastEvents;
+		std::list<std::pair<Observer*, Event>> m_DirectEvents;
 		std::forward_list<std::pair<Observer*, EventType>> m_Listeners;
 
 	public:

@@ -3,6 +3,8 @@
 #include "GameException.h"
 #include "GameDebugWindow.h"
 
+#include <iostream>
+
 static MessageRouter* _instance = NULL;
 
 MessageRouter* MessageRouter::Instance()
@@ -66,13 +68,8 @@ void MessageRouter::doRoute()
 	int broadcastMessageCount = 0;
 	#endif
 
-	auto directIter = m_DirectEvents.cbegin();
-	auto directIterOrigBegin = m_DirectEvents.cbefore_begin();
-
-	auto broadcastIter = m_BroadcastEvents.cbegin();
-	auto broadcastIterOrigBegin = m_BroadcastEvents.cbefore_begin();
-
-	while (directIter != m_DirectEvents.cend())
+	auto directIter = m_DirectEvents.begin();
+	while (directIter != m_DirectEvents.end())
 	{
 		Observer* recipant = (*directIter).first;
 		Event event = (*directIter).second;
@@ -80,25 +77,24 @@ void MessageRouter::doRoute()
 		recipant->notify(event);
 
 		cleanupEventArgs(event);
-		directIter ++;
+		directIter = m_DirectEvents.erase(directIter);
 		
 		#ifdef DEBUG
 		directMessageCount ++;
 		#endif
 	}
 	
-	m_DirectEvents.erase_after(directIterOrigBegin, m_DirectEvents.cend());
-
-	while (broadcastIter != m_BroadcastEvents.cend())
+	auto broadcastIter = m_BroadcastEvents.begin();
+	while (broadcastIter != m_BroadcastEvents.end())
 	{
 		Event event = *broadcastIter;
 
 		for (auto& ObserverMaskPair : m_Listeners)
 		{
-			/*std::cout << int_to_hex_string(ObserverMaskPair.second) << " | "
+			/* std::cout << int_to_hex_string(ObserverMaskPair.second) << " | "
 					  << int_to_hex_string(event.getType()) << " | "
 					  << int_to_hex_string(ObserverMaskPair.second & event.getType())
-					  << std::endl;*/
+					  << std::endl; */
 	
 			if ((ObserverMaskPair.second & event.getType()) == event.getType()) 
 			{
@@ -107,14 +103,12 @@ void MessageRouter::doRoute()
 		}
 
 		cleanupEventArgs(event);
-		broadcastIter ++;
+		broadcastIter = m_BroadcastEvents.erase(broadcastIter);
 
 		#ifdef DEBUG
 		broadcastMessageCount ++;
 		#endif
 	}
-
-	m_BroadcastEvents.erase_after(broadcastIterOrigBegin, m_BroadcastEvents.cend());
 
 	DEBUG_SHOW("DEBUG MAIN", "direct events", std::to_string(directMessageCount));
 	DEBUG_SHOW("DEBUG MAIN", "broadcast events", std::to_string(broadcastMessageCount));

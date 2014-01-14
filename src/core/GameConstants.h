@@ -27,11 +27,13 @@
 /******************* EVENTS **********************/
 
 #define EVENT_TYPE_ALL					0xFFFFFFFF
-#define EVENT_TYPE_COLLISION			0x1000FFFF
+#define EVENT_TYPE_COLLISION			0x1000FFFF	/* Direct Messages EntityEventArgs, the other entity in the collision. */
 #define EVENT_TYPE_SPAWN				0x2000FFFF
 #define EVENT_TYPE_SPAWN_HOOK			0x20000001
 #define EVENT_TYPE_ENTITY				0x4000FFFF
-#define EVENT_TYPE_ENTITY_MOVE			0x40000001
+#define EVENT_TYPE_ENTITY_MOVE			0x40000001	/* Broadcasts (at least) EntityPositionEventArgs, the entity that moved and its new position. */
+#define EVENT_TYPE_HOOK_ATTACH			0x40001000 	/* Broadcasts DoubleEntityEventArgs, first entity the hooked, second entity the hook. */
+#define EVENT_TYPE_HOOK_DETACH			0x40001001  /* Broadcasts EntityEventArgs, the entity is the now dettached hook. */
 
 
 /********* COLLISION IDENTIFIER TYPES ************/

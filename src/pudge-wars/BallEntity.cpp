@@ -15,3 +15,8 @@ void BallEntity::draw()
 {
 	al_draw_filled_circle(m_Position.x, m_Position.y, m_Radius, al_map_rgb(250, 0, 0));
 }
+
+void BallEntity::moveToHook(const Vector2D& hookPosition)
+{
+	m_Position = hookPosition;
+}

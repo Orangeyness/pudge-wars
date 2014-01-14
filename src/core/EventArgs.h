@@ -21,6 +21,18 @@ class EntityEventArgs : public EventArgs
 		int getEntityId() const;
 };
 
+class DoubleEntityEventArgs : public EntityEventArgs
+{
+	protected:
+		int m_SecondEntityId;
+	
+	public:
+		DoubleEntityEventArgs(GameEntityInterface* entity, GameEntityInterface* secondEntity);
+		GameEntityInterface* getSecondEntity() const;
+		int getSecondEntityId() const;
+		
+};
+
 class EntityPositionEventArgs : public EntityEventArgs
 {
 	protected:

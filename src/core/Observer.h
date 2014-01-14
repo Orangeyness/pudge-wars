@@ -16,7 +16,7 @@ class Observer
 		virtual ~Observer() {}
 		bool isDeaf();
 		virtual void notify(const Event& event);
-		virtual void processEvent(const Event& event) { }
+		virtual void processEvent(const Event& event) { } 
 };
 
 

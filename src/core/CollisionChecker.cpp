@@ -5,6 +5,8 @@
 bool CollisionChecker::isColliding(
 	CollidableEntityInterface* first, CollidableEntityInterface* second)
 {
+	if (!first->isSolid() || !second->isSolid()) return false;
+
 	switch(first->getType())
 	{
 		case COLLISION_CHECK_RADIAL:
