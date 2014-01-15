@@ -11,7 +11,11 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 
-HookEntity::HookEntity(int parentId, Vector2D position, double direction, double speed, int life)
+#define DIST_MEASURE SQRD(5)
+#define HOOK_TAIL_ADJUST_PROPORTION 1
+#define HOOK_TAIL_ADJUST_MAX 0.1
+
+HookEntity::HookEntity(int parentId, Vector2D position, double direction, double speed, double maxDistance)
 {
 	MessageRouter::Instance()->registerListener(this, EVENT_TYPE_ENTITY);
 
@@ -19,7 +23,9 @@ HookEntity::HookEntity(int parentId, Vector2D position, double direction, double
 	m_Position = position;
 	m_Direction = direction;
 	m_Speed = speed;
-	m_LifeRemaining = life;
+	m_DistanceCurrent = 0;
+	m_DistanceMax = maxDistance;
+	m_Retracting = false;
 
 	m_TailList.push_front(position);
 }
@@ -31,19 +37,72 @@ HookEntity::~HookEntity()
 
 EntityStatus HookEntity::update()
 {
-	m_LifeRemaining --;
+	DEBUG_SHOW("DEBUG MAIN", "hook distance", std::to_string(m_DistanceCurrent));
+	
+	m_DistanceCurrent += m_Speed;
 
-	m_Position.x -= lengthdir_x(m_Speed, m_Direction);
-	m_Position.y -= lengthdir_y(m_Speed, m_Direction);
+	m_Position.x += lengthdir_x(m_Speed, m_Direction);
+	m_Position.y += lengthdir_y(m_Speed, m_Direction);
 
 	MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
 
-	if (m_LifeRemaining > 0)
-		return ENTITY_ALIVE;
+	updateHookTail();
 
-	MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_HOOK_DETACH, new EntityEventArgs(this)));
+	if (m_DistanceCurrent >= m_DistanceMax)
+	{
+		m_Retracting = true;
+		m_Solid = false;
+	}
 
-	return ENTITY_DEAD;
+	if (m_Retracting)
+	{
+		Vector2D currentRetractPoint = m_TailList.front();
+
+		if (m_Position.euclideanDist(currentRetractPoint) < m_Speed)
+		{
+			m_TailList.pop_front();
+			
+			if (m_TailList.empty())
+			{
+				MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_HOOK_DETACH, new EntityEventArgs(this)));
+
+				return ENTITY_DEAD;
+			}
+
+			currentRetractPoint = m_TailList.front();
+		}
+
+		m_Direction = m_Position.directionToPoint(currentRetractPoint);
+	}
+
+	return ENTITY_ALIVE;
+}
+
+void HookEntity::updateHookTail()
+{
+	if (m_TailList.size() < 3) return;
+	/*
+	auto prevIter = m_TailList.begin();
+	auto currentIter = prevIter++;
+	auto nextIter = currentIter++;
+	
+	while (nextIter != m_TailList.end())
+	{
+		double avgX = (prevIter->x + nextIter->x) / 2;
+		double avgY = (prevIter->y + nextIter->y) / 2;
+	
+		double xAdjust = std::min(HOOK_TAIL_ADJUST_MAX, 
+			(avgX - currentIter->x) / HOOK_TAIL_ADJUST_PROPORTION);
+
+		double yAdjust = std::min(HOOK_TAIL_ADJUST_MAX, 
+			(avgY - currentIter->y) / HOOK_TAIL_ADJUST_PROPORTION);
+
+		currentIter->x += xAdjust;
+		currentIter->y += yAdjust;
+
+		prevIter = currentIter;
+		currentIter = nextIter++;
+	}*/
 }
 
 void HookEntity::draw()
@@ -89,6 +148,7 @@ void HookEntity::processEvent(const Event& event)
 			
 				// Turn solid off, so the hook doesn't collide with anything else
 				m_Solid = false;
+				m_Retracting = true;
 				break;
 			}
 	
@@ -99,14 +159,14 @@ void HookEntity::processEvent(const Event& event)
 			m_Direction = CollisionChecker::calculateReflectAngle(entity, m_Position, m_Direction);
 
 			// Add the bounce point to the tail list
-			if (m_Position.sqauredEuclideanDist(m_TailList.front()) > SQRD(20))
+			if (m_Position.sqauredEuclideanDist(m_TailList.front()) > DIST_MEASURE)
 			{
 				m_TailList.push_front(m_Position);
 			}
 
 			// Update position
-			m_Position.x -= lengthdir_x(m_Speed, m_Direction);
-			m_Position.y -= lengthdir_y(m_Speed, m_Direction);
+			m_Position.x += lengthdir_x(m_Speed, m_Direction);
+			m_Position.y += lengthdir_y(m_Speed, m_Direction);
 			break;
 		}
 
@@ -122,8 +182,10 @@ void HookEntity::processEvent(const Event& event)
 			{
 				Vector2D newPosition = args->getPosition();
 
-				if (newPosition.sqauredEuclideanDist(m_TailList.back()) > SQRD(20))
+				if (newPosition.sqauredEuclideanDist(m_TailList.back()) > DIST_MEASURE)
 				{
+					m_DistanceCurrent += newPosition.euclideanDist(m_TailList.back());
+
 					m_TailList.push_back(newPosition);
 				}
 			}

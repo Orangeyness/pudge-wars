@@ -37,5 +37,4 @@ class HookableInterface : public virtual GameEntityInterface
 
 };
 
-
 #endif

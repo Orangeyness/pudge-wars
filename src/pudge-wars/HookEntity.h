@@ -11,11 +11,15 @@ class HookEntity : public RadialEntityInterface
 		int m_ParentId;
 		double m_Direction;
 		double m_Speed;
-		int m_LifeRemaining;
+		double m_DistanceMax;
+		double m_DistanceCurrent;
 		std::list<Vector2D> m_TailList;
+		bool m_Retracting;
+
+		void updateHookTail();
 
 	public:
-		HookEntity(int parentId, Vector2D position, double direction, double speed, int life);
+		HookEntity(int parentId, Vector2D position, double direction, double speed, double maxDistance);
 		~HookEntity();
 	
 		virtual EntityStatus update();

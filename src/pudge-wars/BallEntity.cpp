@@ -20,3 +20,17 @@ void BallEntity::moveToHook(const Vector2D& hookPosition)
 {
 	m_Position = hookPosition;
 }
+
+void BallEntity::attachHook(int hookId)
+{
+	m_Solid = false;
+
+	HookableInterface::attachHook(hookId);
+}
+
+void BallEntity::dettachHook()
+{
+	m_Solid = true;
+
+	HookableInterface::dettachHook();
+}
