@@ -36,6 +36,7 @@ class Vector2D
 		Vector2D(double _x, double _y);
 		Vector2D(double direction);
 		void set(double _x, double _y);
+		void moveInDirection(double len, double dir);
 		double toDirection();
 		double magnitude();
 		void normalise();
@@ -45,6 +46,11 @@ class Vector2D
 		Vector2D manhattanDist(const Vector2D& other);
 		double euclideanDist(const Vector2D& other);
 		double sqauredEuclideanDist(const Vector2D& other);
+
+		Vector2D operator -(const Vector2D& rhs) const;
+		Vector2D operator +(const Vector2D& rhs) const;
+		Vector2D& operator +=(const Vector2D& rhs);
+		Vector2D& operator -=(const Vector2D& rhs);
 };
 
 class Rect
@@ -73,8 +79,6 @@ class Rect
 		bool contains(const Vector2D& point);
 		bool intersects(const Rect& r);
 		bool intersects(const Vector2D& circleCenter, double radius);
-
-
 };
 
 #endif

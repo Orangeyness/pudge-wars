@@ -42,7 +42,7 @@ void IntroState::processEvent(const Event& event)
 			EntityEventArgs* args = event.getArgs<EntityEventArgs*>();
 			PudgeEntity* pudga = args->getEntity<PudgeEntity*>();
 
-			m_EntityPool.add(new HookEntity(pudga->id(), pudga->getPosition(), pudga->getFacingDirection(), 10, 400));
+			m_EntityPool.add(new HookEntity(pudga->id(), pudga->getPosition(), pudga->getFacingDirection(), pudga->getRadius(), 10, 1500));
 			break;
 		}
 	}

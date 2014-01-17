@@ -16,10 +16,11 @@ int EntityEventArgs::getEntityId() const
 	return m_EntityId;
 }
 /*							--------						*/
-
 /*			DoubleEntityEventArgs : EntityEventArgs			*/
 
-DoubleEntityEventArgs::DoubleEntityEventArgs(GameEntityInterface* entity, GameEntityInterface* secondEntity)
+DoubleEntityEventArgs::DoubleEntityEventArgs(
+	GameEntityInterface* entity, 
+	GameEntityInterface* secondEntity)
 	: EntityEventArgs(entity)
 {
 	m_SecondEntityId = secondEntity->id();
@@ -35,16 +36,34 @@ int DoubleEntityEventArgs::getSecondEntityId() const
 	return m_SecondEntityId;
 }
 /*							--------						*/
+/*				PositionEventArgs : EventArgs				*/
 
-/*			EntityPositionEventArgs : EntityEventArgs		*/
-EntityPositionEventArgs::EntityPositionEventArgs(GameEntityInterface* entity, const Vector2D& pos)
-	: EntityEventArgs(entity)
+PositionEventArgs::PositionEventArgs(const Vector2D& pos)
 {
 	m_Position = pos;
 }
 
-Vector2D EntityPositionEventArgs::getPosition() const
+const Vector2D& PositionEventArgs::getPosition() const
 {
 	return m_Position;
 }
+
+/*							--------						*/
+/*			EntityPositionEventArgs : EntityEventArgs		*/
+EntityPositionEventArgs::EntityPositionEventArgs(
+	GameEntityInterface* entity, 
+	const Vector2D& pos)
+	: EntityEventArgs(entity), PositionEventArgs(pos)
+{ }
+/*							--------						*/
+/*		DoubleEntityPositionEventArgs : EntityEventArgs		*/
+
+DoubleEntityPositionEventArgs::DoubleEntityPositionEventArgs(
+	GameEntityInterface* entity,
+	GameEntityInterface* secondEntity,
+	const Vector2D& pos)
+	: 	EntityEventArgs(entity), 
+		DoubleEntityEventArgs(entity, secondEntity), 
+		PositionEventArgs(pos)
+{ }
 /*							--------						*/

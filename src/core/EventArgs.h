@@ -10,7 +10,7 @@ class EventArgs
 		virtual	~EventArgs() { }	
 };
 
-class EntityEventArgs : public EventArgs
+class EntityEventArgs : public virtual EventArgs
 {
 	protected:
 		int m_EntityId;
@@ -33,7 +33,7 @@ class EntityEventArgs : public EventArgs
 		}
 };
 
-class DoubleEntityEventArgs : public EntityEventArgs
+class DoubleEntityEventArgs : public virtual EntityEventArgs
 {
 	protected:
 		int m_SecondEntityId;
@@ -57,14 +57,29 @@ class DoubleEntityEventArgs : public EntityEventArgs
 		
 };
 
-class EntityPositionEventArgs : public EntityEventArgs
+class PositionEventArgs : public virtual EventArgs
 {
 	protected:
 		Vector2D m_Position;
 
 	public:
+		PositionEventArgs(const Vector2D& pos);
+		const Vector2D& getPosition() const;
+};
+
+class EntityPositionEventArgs : public virtual EntityEventArgs, public virtual PositionEventArgs
+{
+	public:
 		EntityPositionEventArgs(GameEntityInterface* entity, const Vector2D& pos);
-		Vector2D getPosition() const;
+};
+
+class DoubleEntityPositionEventArgs : public virtual DoubleEntityEventArgs, public virtual PositionEventArgs
+{
+
+	public:
+		DoubleEntityPositionEventArgs(	GameEntityInterface* entity, 
+										GameEntityInterface* secondEntity,
+						 				const Vector2D& pos);
 };
 
 #endif

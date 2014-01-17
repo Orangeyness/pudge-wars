@@ -22,13 +22,13 @@ class HookableInterface : public virtual GameEntityInterface
 				virtual void processEvent(const Event& event);
 		};
 
-		HookObserver m_Observer;
+		HookObserver m_HookObserver;
 
 	protected:
-		virtual void attachHook(int hookId);
+		virtual void attachHook(int hookId, const Vector2D& position);
 		virtual void dettachHook();
 		virtual void moveToHook(const Vector2D& hookPosition) = 0;
-		virtual void attachSecondHookBehaviour(int currentHook, int newHook);
+		virtual void attachSecondHookBehaviour(int currentHook, int newHook, const Vector2D& position);
 		virtual bool isAttachedToHook();
 
 	public:

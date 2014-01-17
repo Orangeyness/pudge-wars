@@ -56,6 +56,12 @@ void Vector2D::set(double _x, double _y)
 	y = _y;
 }
 
+void Vector2D::moveInDirection(double len, double dir)
+{
+	x += lengthdir_x(len, dir);
+	y += lengthdir_y(len, dir);
+}
+
 double Vector2D::toDirection()
 {
 	return std::atan2(-y, x);
@@ -107,6 +113,32 @@ double Vector2D::directionToPoint(const Vector2D& other)
 	return point_direction(other.x, other.y, x, y);
 }
 
+
+Vector2D Vector2D::operator +(const Vector2D& rhs) const
+{
+	return Vector2D(x + rhs.x, y + rhs.y);
+}
+
+Vector2D Vector2D::operator -(const Vector2D& rhs) const
+{
+	return Vector2D(x - rhs.x, y - rhs.y);
+}
+
+Vector2D& Vector2D::operator +=(const Vector2D& rhs)
+{
+	x += rhs.x;
+	y += rhs.y;
+	
+	return *this;
+}
+
+Vector2D& Vector2D::operator -=(const Vector2D& rhs)
+{
+	x -= rhs.x;
+	y -= rhs.y;
+
+	return *this;
+}
 
 Rect::Rect()
 {

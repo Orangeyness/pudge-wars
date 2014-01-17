@@ -6,12 +6,12 @@
 #include "../core/Event.h"
 
 HookableInterface::HookableInterface()
-	: m_Observer(*this)
+	: m_HookObserver(*this)
 {
 	m_HookEntityId = ENTITY_ID_NULL;
 }
 
-void HookableInterface::attachHook(int hookId)
+void HookableInterface::attachHook(int hookId, const Vector2D& position)
 {
 	m_HookEntityId = hookId;
 }
@@ -26,9 +26,9 @@ bool HookableInterface::isAttachedToHook()
 	return m_HookEntityId != ENTITY_ID_NULL;
 }
 
-void HookableInterface::attachSecondHookBehaviour(int currentHook, int newHook)
+void HookableInterface::attachSecondHookBehaviour(int currentHook, int newHook, const Vector2D& position)
 {
-	attachHook(newHook);
+	attachHook(newHook, position);
 }
 
 HookableInterface::HookObserver::HookObserver(HookableInterface& parent)
@@ -58,18 +58,19 @@ void HookableInterface::HookObserver::processEvent(const Event& event)
 			*/
 			if (m_Parent.id() != args->getEntityId()) break;
 
-			DoubleEntityEventArgs* dArgs = event.getArgs<DoubleEntityEventArgs*>();
+			DoubleEntityPositionEventArgs* dArgs = event.getArgs<DoubleEntityPositionEventArgs*>();
 
 			int newHookId = dArgs->getSecondEntityId();
+			Vector2D newPosition = dArgs->getPosition();
 			if (m_Parent.m_HookEntityId == newHookId) break;
 
 			if (m_Parent.isAttachedToHook())
 			{
-				m_Parent.attachSecondHookBehaviour(m_Parent.m_HookEntityId, newHookId);
+				m_Parent.attachSecondHookBehaviour(m_Parent.m_HookEntityId, newHookId, newPosition);
 			}
 			else
 			{
-				m_Parent.attachHook(newHookId);
+				m_Parent.attachHook(newHookId, newPosition);
 			}
 
 			break;

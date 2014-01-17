@@ -18,14 +18,20 @@ void BallEntity::draw()
 
 void BallEntity::moveToHook(const Vector2D& hookPosition)
 {
-	m_Position = hookPosition;
+	Vector2D diff = hookPosition - m_HookPosition;
+
+	m_Position += diff;
+
+	m_HookPosition = hookPosition;
 }
 
-void BallEntity::attachHook(int hookId)
+void BallEntity::attachHook(int hookId, const Vector2D& hookPosition)
 {
 	m_Solid = false;
 
-	HookableInterface::attachHook(hookId);
+	m_HookPosition = hookPosition;
+
+	HookableInterface::attachHook(hookId, hookPosition);
 }
 
 void BallEntity::dettachHook()
