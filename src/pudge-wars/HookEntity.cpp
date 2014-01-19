@@ -29,10 +29,11 @@ HookEntity::HookEntity(int parentId, Vector2D position, double direction, double
 	m_Retracting = false;
 	m_CasterPosition = position;
 	m_CasterRadius = radius;
-	m_FramesSinceSpawn = 0;
 	m_HookAttached = false;
 
 	m_TailList.push_front(m_CasterPosition);
+
+	addCollisionGroup(COLLISION_GROUP_HOOKABLE);
 }
 
 HookEntity::~HookEntity()
@@ -45,16 +46,16 @@ EntityStatus HookEntity::update()
 	DEBUG_SHOW("DEBUG MAIN", "hook distance", std::to_string(m_DistanceCurrent));
 	DEBUG_SHOW("DEBUG MAIN", "hook resolution", std::to_string(m_TailList.size()));
 
-	m_FramesSinceSpawn += 1;
-
-	if (m_DistanceCurrent >= m_DistanceMax)
-	{
-		m_Retracting = true;
-	}
-
 	if (!m_Retracting)
 	{
 		updateForwardHook();
+
+		if (m_DistanceCurrent >= m_DistanceMax)
+		{
+			m_Retracting = true;
+
+			removeCollisionGroup(COLLISION_GROUP_BASIC);
+		}
 	}
 	else
 	{
@@ -76,7 +77,8 @@ EntityStatus HookEntity::update()
 
 void HookEntity::updateForwardHook()
 {
-	if (m_FramesSinceSpawn % HOOK_TAIL_POINTS_FRAME_INTERVAL)
+	uint64_t currentFrame = ServiceLocator::GetGameDataService()->getGameFrameCount();
+	if (currentFrame % HOOK_TAIL_POINTS_FRAME_INTERVAL)
 	{
 		m_TailList.push_front(m_CasterPosition);
 	}

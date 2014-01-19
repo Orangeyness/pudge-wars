@@ -19,9 +19,9 @@ PudgeEntity::PudgeEntity(InputProxyInterface* input)
 
 	m_DirectionCurrent = 0;
 	m_DirectionTarget = m_DirectionCurrent;
-	m_DirectionTurnRate = DEG_TO_RAD(5);
+	m_DirectionTurnRate = DEG_TO_RAD(20);
 	m_SpeedCurrent = 0;
-	m_SpeedMax = 3;
+	m_SpeedMax = 4;
 	m_SpeedAcceleration = 0.5;
 	m_SpeedDeceleration = 2;
 
@@ -29,6 +29,8 @@ PudgeEntity::PudgeEntity(InputProxyInterface* input)
 	m_HookRecoveryActive = false;
 	m_HookRecoveryTime = 40;
 	m_HookRecoveryTimeLeft = 0;
+
+	addCollisionGroup(COLLISION_GROUP_PUDGES);
 }
 
 EntityStatus PudgeEntity::update()
@@ -87,6 +89,7 @@ EntityStatus PudgeEntity::update()
 		m_HookActive = true;
 		m_HookTarget = m_Input->hookTarget();
 		m_DirectionTarget = m_Position.directionToPoint(m_HookTarget);
+		m_SpeedCurrent = 0;
 	}
 
 	if (m_HookActive && m_DirectionCurrent == m_DirectionTarget)
@@ -100,7 +103,7 @@ EntityStatus PudgeEntity::update()
 
 	// Update position if moving
 
-	if (m_SpeedCurrent > m_SpeedAcceleration)
+	if (m_SpeedCurrent > 0)
 	{
 		m_Position.x += lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
 		m_Position.y += lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);

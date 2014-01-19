@@ -89,19 +89,24 @@ void IntroState::detectCollisions()
 	{
 		EntityCollidable* colliderA = (*itA).second;
 
-		auto itB = itA;
-		itB ++;
-		while (itB != end)
+		if (colliderA->isSolid())
 		{
-			EntityCollidable* colliderB = (*itB).second;
-	
-			if (CollisionHelper::isColliding(colliderA, colliderB))
-			{
-				m_Events.directMessage(colliderA, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderB)));
-				m_Events.directMessage(colliderB, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderA)));
-			}
-
+			auto itB = itA;
 			itB ++;
+			while (itB != end)
+			{
+				EntityCollidable* colliderB = (*itB).second;
+
+				if (colliderB->isSolid() &&
+					(colliderA->getCollisionGroup() & colliderB->getCollisionGroup()) != 0 &&
+					CollisionHelper::isColliding(colliderA, colliderB))
+				{
+					m_Events.directMessage(colliderA, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderB)));
+					m_Events.directMessage(colliderB, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderA)));
+				}
+
+				itB ++;
+			}
 		}
 
 		itA ++;

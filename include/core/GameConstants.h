@@ -2,6 +2,7 @@
 #define H_GAME_CONSTANTS_
 
 #include <cstddef>
+#include <cstdint>
 
 /***************** EXCEPTIONS ********************/
 
@@ -44,8 +45,14 @@
 
 /********* COLLISION IDENTIFIER TYPES ************/
 
-#define COLLISION_CHECK_BBOX			0x20000001
-#define COLLISION_CHECK_RADIAL			0x20000002
+#define COLLISION_CHECK_BBOX			0x00000001
+#define COLLISION_CHECK_RADIAL			0x00000002
+
+/************** COLLISION GROUPS *****************/
+#define COLLISION_GROUP_ALL				0xFFFFFFFF
+#define COLLISION_GROUP_BASIC			0xFFFF0000
+#define COLLISION_GROUP_PUDGES			0x00000001
+#define COLLISION_GROUP_HOOKABLE		0x00000002
 
 #include <string>
 

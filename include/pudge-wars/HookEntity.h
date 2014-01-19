@@ -18,7 +18,6 @@ class HookEntity : public EntityRadial
 		std::list<Vector2D> m_TailList;
 		bool m_Retracting;
 		bool m_HookAttached;
-		int m_FramesSinceSpawn;
 
 		void updateForwardHook();
 		EntityStatus updateRetractingHook();

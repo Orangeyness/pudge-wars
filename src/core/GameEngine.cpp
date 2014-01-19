@@ -1,9 +1,13 @@
 #include "core/GameEngine.h"
 #include "core/GameException.h"
 #include "core/GameDebugWindow.h"
+#include "core/services/ServiceLocator.h"
 
 GameEngine::GameEngine()
+	: m_DataService(*this)
 {
+	ServiceLocator::AddService(&m_DataService);
+
 	// Settings
 	m_TargetFramesPerSecond = 60;
 	
@@ -34,6 +38,8 @@ GameEngine::~GameEngine()
 		delete m_StateStack.top();
 		m_StateStack.pop();
 	}
+
+	ServiceLocator::RemoveService(&m_DataService);
 }
 
 void GameEngine::initialise()
@@ -180,17 +186,36 @@ void GameEngine::quit()
 	m_GameActive = false;
 }
 
+ALLEGRO_BITMAP* GameEngine::screen()
+{
+	return al_get_backbuffer(m_Display);
+}
+
+GameEngine::DataService::DataService(GameEngine& parent)
+	: m_Parent(parent) { }
+
+int GameEngine::DataService::getScreenWidth()
+{
+	return al_get_display_width(m_Parent.m_Display);
+}
+
+int GameEngine::DataService::getScreenHeight()
+{
+	return al_get_display_height(m_Parent.m_Display);
+}
+
+uint64_t GameEngine::DataService::getGameFrameCount()
+{
+	return m_Parent.m_FrameCount;
+}
+
+// Helper Methods
 GameStateInterface* GameEngine::getCurrentState()
 {
 	if (m_StateStack.empty())
 		THROW_GAME_EXCEPTION(EXCEP_STATE_UNEXPECTED_EMPTY);
 	
 	return m_StateStack.top();
-}
-
-ALLEGRO_BITMAP* GameEngine::screen()
-{
-	return al_get_backbuffer(m_Display);
 }
 
 void GameEngine::calculateFrameRate()

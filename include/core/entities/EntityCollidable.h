@@ -12,6 +12,7 @@ class EntityCollidable : public Entity, public virtual EventObserver
 {
 	protected:
 		Vector2D m_Position;
+		int m_CollisionGroup;
 		bool m_Solid;
 	
 	public:
@@ -19,6 +20,9 @@ class EntityCollidable : public Entity, public virtual EventObserver
 		virtual CollidableType getType() = 0;
 		virtual bool isSolid();
 		virtual Vector2D getPosition();
+		int getCollisionGroup();
+		void addCollisionGroup(int group);
+		void removeCollisionGroup(int group);
 };
 
 
