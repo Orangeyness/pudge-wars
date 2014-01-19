@@ -8,6 +8,11 @@ set(GAME_FILES
 	BallEntity.cpp
 	HookEntity.cpp
 	HookableInterface.cpp
+	pudge-states/PudgeState.cpp
+	pudge-states/PudgeWalkState.cpp
+	pudge-states/PudgeHookThrowState.cpp
+	pudge-states/PudgeStunRecoveryState.cpp
+	pudge-states/PudgeOnHookState.cpp
 	)
 
 add_library(GameComponents OBJECT ${GAME_FILES})

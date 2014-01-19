@@ -13,7 +13,6 @@
 PudgeEntity::PudgeEntity(InputProxyInterface* input, double x, double y) 
 {
 	m_Input = input;	
-	m_HookTarget.set(-1, -1);
 	m_Radius = 20;
 	m_Position.set(x, y);
 
@@ -25,32 +24,37 @@ PudgeEntity::PudgeEntity(InputProxyInterface* input, double x, double y)
 	m_SpeedAcceleration = 0.5;
 	m_SpeedDeceleration = 2;
 
-	m_HookActive = false;
-	m_HookRecoveryActive = false;
-	m_HookRecoveryTime = 40;
-	m_HookRecoveryTimeLeft = 0;
-
-	m_IsHooked = false;
+	m_HookRecoveryTime = 20;
+	m_HookedRecoveryTime = 50;
 	
+	m_State = new PudgeWalkState();
+
 	addCollisionGroup(COLLISION_GROUP_PUDGES);
 	addCollisionGroup(COLLISION_GROUP_HOOKABLE);
 }
 
+PudgeEntity::~PudgeEntity()
+{
+	cleanState();
+}
+
 EntityStatus PudgeEntity::update()
 {
-	// Get new movement input if not throwing a hook.
-	if (m_Input->hasMoveDirection() && !m_HookActive && !m_HookRecoveryActive)
+	if (m_State->readyToChangeState())
 	{
-		m_DirectionTarget = m_Input->moveDirection();
-	
-		m_SpeedCurrent = std::min(m_SpeedCurrent + m_SpeedAcceleration, m_SpeedMax);
-	}
-		else
-	{
-		if (!m_IsHooked)
-			m_SpeedCurrent = std::max(m_SpeedCurrent - m_SpeedDeceleration, 0.0);
+		changeState(m_State->nextState());
 	}
 
+	EntityStatus rtn = m_State->update(*this);
+
+	updateDirection();
+	updatePosition();
+
+	return rtn;
+}
+
+void PudgeEntity::updateDirection()
+{
 	// Determine current direction
 	double diff = m_DirectionTarget - m_DirectionCurrent;
 	double absoluteDiff = std::abs(diff);
@@ -78,35 +82,10 @@ EntityStatus PudgeEntity::update()
 			m_DirectionCurrent += M_PI * 2;
 		}
 	}
+}
 
-	if (m_HookRecoveryTime > 0 && m_HookRecoveryActive)
-	{
-		m_HookRecoveryTime -= 1;
-	}
-	else
-	{
-		m_HookRecoveryActive = false;
-	}
-	
-	if (m_Input->hasHookTarget() && !m_HookRecoveryActive)
-	{
-		m_HookActive = true;
-		m_HookTarget = m_Input->hookTarget();
-		m_DirectionTarget = m_Position.directionToPoint(m_HookTarget);
-		m_SpeedCurrent = 0;
-	}
-
-	if (m_HookActive && m_DirectionCurrent == m_DirectionTarget)
-	{
-		ServiceLocator::GetEventService()->broadcast(Event(EVENT_TYPE_SPAWN_HOOK, new EntityEventArgs(this)));
-
-		m_HookActive = false;
-		m_HookRecoveryTimeLeft = m_HookRecoveryTime;
-		m_HookRecoveryActive = true;
-	}
-
-	// Update position if moving
-
+void PudgeEntity::updatePosition()
+{
 	if (m_SpeedCurrent > 0)
 	{
 		m_Position.x += lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
@@ -114,8 +93,6 @@ EntityStatus PudgeEntity::update()
 
 		ServiceLocator::GetEventService()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
 	}
-		
-	return ENTITY_ALIVE;
 }
 
 void PudgeEntity::draw()
@@ -137,46 +114,41 @@ void PudgeEntity::draw()
 
 void PudgeEntity::processEvent(const Event& event)
 {	
-	switch(event.getType())
-	{
-		case EVENT_TYPE_COLLISION:
-				if (m_IsHooked) dettachHook();
+	m_State->processEvent(*this, event);
+}
 
-				m_Position.x -= lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
-				m_Position.y -= lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
-		
-				m_SpeedCurrent = 0;
-			break;
-	}
+void PudgeEntity::changeState(PudgeState* state)
+{
+	m_State->exit(*this);
+	delete m_State;
+
+	m_State = state;
+	m_State->enter(*this);
+}
+
+void PudgeEntity::cleanState() 
+{
+	delete m_State;
+	m_State = NULL;
 }
 
 void PudgeEntity::moveToHook(const Vector2D& hookPosition)
 {
-	m_DirectionCurrent = m_Position.directionToPoint(hookPosition);
-	m_SpeedCurrent = m_Position.euclideanDist(hookPosition);
-
-	m_Position.x += lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
-	m_Position.y += lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
+	m_State->moveToHook(*this, hookPosition);
 }
 
 void PudgeEntity::attachHook(int hookId, const Vector2D& hookPosition)
 {
-	m_IsHooked = true;
-
-	removeCollisionGroup(COLLISION_GROUP_BASIC);
-	removeCollisionGroup(COLLISION_GROUP_HOOKABLE);
-
 	HookableInterface::attachHook(hookId, hookPosition);
+
+	m_State->attachHook(*this, hookId, hookPosition);
 }
 
 void PudgeEntity::dettachHook()
 {
-	m_IsHooked = false;
-
-	addCollisionGroup(COLLISION_GROUP_BASIC);
-	addCollisionGroup(COLLISION_GROUP_HOOKABLE);
-
 	HookableInterface::dettachHook();
+
+	m_State->dettachHook(*this);
 }
 
 double PudgeEntity::getFacingDirection() { return m_DirectionCurrent; }
