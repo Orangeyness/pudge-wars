@@ -13,6 +13,7 @@ class IntroState : public GameStateInterface, public EventObserver
 {
 	private:
 		UserInputProxy m_UserInput;
+		UserInputProxy m_Temp;
 		EntityManager m_EntityManager;
 		BufferedEventService m_Events;
 

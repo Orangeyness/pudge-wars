@@ -4,8 +4,9 @@
 #include "core/entities/EntityRadial.h"
 
 #include "pudge-wars/InputProxyInterface.h"
+#include "pudge-wars/HookableInterface.h"
 
-class PudgeEntity : public EntityRadial
+class PudgeEntity : public virtual EntityRadial, public virtual HookableInterface
 {
 	private:
 		double m_DirectionCurrent;
@@ -20,6 +21,8 @@ class PudgeEntity : public EntityRadial
 		bool m_HookRecoveryActive;
 		int  m_HookRecoveryTime;
 		int  m_HookRecoveryTimeLeft;
+		bool m_IsHooked;
+
 
 		InputProxyInterface* m_Input;
 		Vector2D m_HookTarget;
@@ -27,10 +30,14 @@ class PudgeEntity : public EntityRadial
 		EntityStatus processEvents();
 
 	public:
-		PudgeEntity(InputProxyInterface* input);
+		PudgeEntity(InputProxyInterface* input, double x, double y);
 		virtual EntityStatus update();
 		virtual void draw();
 		virtual void processEvent(const Event& event);
+
+		virtual void moveToHook(const Vector2D& hookPosition);
+		virtual void attachHook(int hookId, const Vector2D& hookPosition);
+		virtual void dettachHook();
 
 		double getFacingDirection();
 };

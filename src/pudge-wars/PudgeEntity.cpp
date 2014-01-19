@@ -10,12 +10,12 @@
 
 #include <algorithm>
 
-PudgeEntity::PudgeEntity(InputProxyInterface* input) 
+PudgeEntity::PudgeEntity(InputProxyInterface* input, double x, double y) 
 {
 	m_Input = input;	
 	m_HookTarget.set(-1, -1);
 	m_Radius = 20;
-	m_Position.set(200, 200);
+	m_Position.set(x, y);
 
 	m_DirectionCurrent = 0;
 	m_DirectionTarget = m_DirectionCurrent;
@@ -30,7 +30,10 @@ PudgeEntity::PudgeEntity(InputProxyInterface* input)
 	m_HookRecoveryTime = 40;
 	m_HookRecoveryTimeLeft = 0;
 
+	m_IsHooked = false;
+	
 	addCollisionGroup(COLLISION_GROUP_PUDGES);
+	addCollisionGroup(COLLISION_GROUP_HOOKABLE);
 }
 
 EntityStatus PudgeEntity::update()
@@ -44,7 +47,8 @@ EntityStatus PudgeEntity::update()
 	}
 		else
 	{
-		m_SpeedCurrent = std::max(m_SpeedCurrent - m_SpeedDeceleration, 0.0);
+		if (!m_IsHooked)
+			m_SpeedCurrent = std::max(m_SpeedCurrent - m_SpeedDeceleration, 0.0);
 	}
 
 	// Determine current direction
@@ -136,12 +140,43 @@ void PudgeEntity::processEvent(const Event& event)
 	switch(event.getType())
 	{
 		case EVENT_TYPE_COLLISION:
+				if (m_IsHooked) dettachHook();
+
 				m_Position.x -= lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
 				m_Position.y -= lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
 		
 				m_SpeedCurrent = 0;
 			break;
 	}
+}
+
+void PudgeEntity::moveToHook(const Vector2D& hookPosition)
+{
+	m_DirectionCurrent = m_Position.directionToPoint(hookPosition);
+	m_SpeedCurrent = m_Position.euclideanDist(hookPosition);
+
+	m_Position.x += lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
+	m_Position.y += lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
+}
+
+void PudgeEntity::attachHook(int hookId, const Vector2D& hookPosition)
+{
+	m_IsHooked = true;
+
+	removeCollisionGroup(COLLISION_GROUP_BASIC);
+	removeCollisionGroup(COLLISION_GROUP_HOOKABLE);
+
+	HookableInterface::attachHook(hookId, hookPosition);
+}
+
+void PudgeEntity::dettachHook()
+{
+	m_IsHooked = false;
+
+	addCollisionGroup(COLLISION_GROUP_BASIC);
+	addCollisionGroup(COLLISION_GROUP_HOOKABLE);
+
+	HookableInterface::dettachHook();
 }
 
 double PudgeEntity::getFacingDirection() { return m_DirectionCurrent; }

@@ -3,7 +3,7 @@
 
 #include "core/entities/EntityCollidable.h"
 
-class EntityBoundingBox : public EntityCollidable
+class EntityBoundingBox : public virtual EntityCollidable
 {
 	protected:
 		Vector2D m_BoundingBoxOrigin;

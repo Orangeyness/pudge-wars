@@ -8,7 +8,7 @@
 
 typedef int CollidableType;
 
-class EntityCollidable : public Entity, public virtual EventObserver
+class EntityCollidable : public virtual Entity, public virtual EventObserver
 {
 	protected:
 		Vector2D m_Position;

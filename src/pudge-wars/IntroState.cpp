@@ -21,7 +21,8 @@ IntroState::IntroState()
 
 	m_Events.addListener(this, EVENT_TYPE_SPAWN);
 
-	m_EntityManager.add(new PudgeEntity(&m_UserInput));
+	m_EntityManager.add(new PudgeEntity(&m_UserInput, 200, 200));
+	m_EntityManager.add(new PudgeEntity(&m_Temp, 250, 250));
 	m_EntityManager.add(new BallEntity(Vector2D(350, 300), 15));
 	m_EntityManager.add(new WallEntity(Vector2D(20, 20), 300, 50));
 }

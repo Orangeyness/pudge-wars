@@ -3,7 +3,7 @@
 
 #include "core/entities/EntityCollidable.h"
 
-class EntityRadial : public EntityCollidable
+class EntityRadial : public virtual EntityCollidable
 {
 	protected:
 		double m_Radius;
