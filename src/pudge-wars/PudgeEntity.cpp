@@ -1,8 +1,9 @@
-#include "PudgeEntity.h"
-#include "../core/GeometryHelper.h"
-#include "../core/GameConstants.h"
-#include "../core/GameException.h"
-#include "../core/MessageRouter.h"
+#include "pudge-wars/PudgeEntity.h"
+
+#include "core/GameConstants.h"
+#include "core/GameException.h"
+#include "core/events/BufferedEventService.h"
+#include "core/helpers/GeometryHelper.h"
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
@@ -93,7 +94,7 @@ EntityStatus PudgeEntity::update()
 
 	if (m_HookActive && m_DirectionCurrent == m_DirectionTarget)
 	{
-		MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_SPAWN_HOOK, new EntityEventArgs(this)));
+		BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_SPAWN_HOOK, new EntityEventArgs(this)));
 
 		m_HookActive = false;
 		m_HookRecoveryTimeLeft = m_HookRecoveryTime;
@@ -107,7 +108,7 @@ EntityStatus PudgeEntity::update()
 		m_Position.x += lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
 		m_Position.y += lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
 
-		MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
+		BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
 	}
 		
 	return ENTITY_ALIVE;

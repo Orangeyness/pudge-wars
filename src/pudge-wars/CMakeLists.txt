@@ -1,3 +1,5 @@
+include_directories("${CMAKE_SOURCE_DIR}/include/pudge-wars")
+
 set(GAME_FILES 
 	IntroState.cpp 
 	PudgeEntity.cpp 

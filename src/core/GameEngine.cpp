@@ -1,6 +1,6 @@
-#include "GameEngine.h"
-#include "GameException.h"
-#include "GameDebugWindow.h"
+#include "core/GameEngine.h"
+#include "core/GameException.h"
+#include "core/GameDebugWindow.h"
 
 GameEngine::GameEngine()
 {

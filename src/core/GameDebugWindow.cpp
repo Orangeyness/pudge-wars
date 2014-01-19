@@ -1,6 +1,6 @@
-#include "GameDebugWindow.h"
-#include "GameConstants.h"
-#include "GameException.h"
+#include "core/GameDebugWindow.h"
+#include "core/GameConstants.h"
+#include "core/GameException.h"
 
 static std::unordered_map<std::string, GameDebugWindow*> _NameToWindowMap;
 

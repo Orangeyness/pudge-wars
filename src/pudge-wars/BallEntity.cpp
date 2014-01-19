@@ -1,4 +1,4 @@
-#include "BallEntity.h"
+#include "pudge-wars/BallEntity.h"
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>

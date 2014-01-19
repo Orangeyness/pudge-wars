@@ -1,33 +1,33 @@
-#include "IntroState.h"
-#include "PudgeEntity.h"
-#include "WallEntity.h"
-#include "BallEntity.h"
-#include "HookEntity.h"
+#include "pudge-wars/IntroState.h"
+#include "pudge-wars/PudgeEntity.h"
+#include "pudge-wars/WallEntity.h"
+#include "pudge-wars/BallEntity.h"
+#include "pudge-wars/HookEntity.h"
 
-#include "../core/GameConstants.h"
-#include "../core/GameDebugWindow.h"
-#include "../core/GameException.h"
-#include "../core/GeometryHelper.h"
-#include "../core/CollisionChecker.h"
-#include "../core/Event.h"
+#include "core/GameConstants.h"
+#include "core/GameDebugWindow.h"
+#include "core/GameException.h"
+#include "core/helpers/GeometryHelper.h"
+#include "core/helpers/CollisionHelper.h"
+#include "core/events/Event.h"
 
 #include <allegro5/allegro.h>
 #include <iostream>
 
 IntroState::IntroState()
 {
-	m_MessageRouter.registerListener(this, EVENT_TYPE_SPAWN);
+	m_BufferedEventService.registerListener(this, EVENT_TYPE_SPAWN);
 
-	m_EntityPool.add(new PudgeEntity(&m_UserInput));
-	m_EntityPool.add(new BallEntity(Vector2D(350, 300), 15));
-	m_EntityPool.add(new WallEntity(Vector2D(20, 20), 300, 50));
+	m_EntityManager.add(new PudgeEntity(&m_UserInput));
+	m_EntityManager.add(new BallEntity(Vector2D(350, 300), 15));
+	m_EntityManager.add(new WallEntity(Vector2D(20, 20), 300, 50));
 }
 
 IntroState::~IntroState()
 {
-	m_EntityPool.clean();
+	m_EntityManager.clean();
 
-	m_MessageRouter.deregisterListener(this);
+	m_BufferedEventService.deregisterListener(this);
 }
 
 void IntroState::pause() { }
@@ -42,7 +42,7 @@ void IntroState::processEvent(const Event& event)
 			EntityEventArgs* args = event.getArgs<EntityEventArgs*>();
 			PudgeEntity* pudga = args->getEntity<PudgeEntity*>();
 
-			m_EntityPool.add(new HookEntity(pudga->id(), pudga->getPosition(), pudga->getFacingDirection(), pudga->getRadius(), 10, 1500));
+			m_EntityManager.add(new HookEntity(pudga->id(), pudga->getPosition(), pudga->getFacingDirection(), pudga->getRadius(), 10, 1500));
 			break;
 		}
 	}
@@ -60,41 +60,41 @@ void IntroState::update(GameEngine* game)
 	m_UserInput.update(&keyboardState, &mouseState);
 
 	// Update all entities
-	m_EntityPool.updateAll();
+	m_EntityManager.updateAll();
 
 	// Check for collisions of now updated objects
 	detectCollisions();
 	
 	// Route messages from this frame
-	m_MessageRouter.doRoute();
+	m_BufferedEventService.doRoute();
 
 	// Delete dead entities
-	m_EntityPool.deleteDead();
+	m_EntityManager.deleteDead();
 
-	DEBUG_SHOW("DEBUG MAIN", "Entities Alive", std::to_string(GameEntityInterface::AliveCount()), 1);
+	DEBUG_SHOW("DEBUG MAIN", "Entities Alive", std::to_string(Entity::AliveCount()), 1);
 
-	if (m_EntityPool.empty())
+	if (m_EntityManager.empty())
 		game->quit();
 }
 
 void IntroState::detectCollisions()
 {
-	auto itA = m_EntityPool.collidableBegin();
-	auto end = m_EntityPool.collidableEnd();
+	auto itA = m_EntityManager.collidableBegin();
+	auto end = m_EntityManager.collidableEnd();
 	while (itA != end)
 	{
-		CollidableEntityInterface* colliderA = (*itA).second;
+		EntityCollidable* colliderA = (*itA).second;
 
 		auto itB = itA;
 		itB ++;
 		while (itB != end)
 		{
-			CollidableEntityInterface* colliderB = (*itB).second;
+			EntityCollidable* colliderB = (*itB).second;
 	
-			if (CollisionChecker::isColliding(colliderA, colliderB))
+			if (CollisionHelper::isColliding(colliderA, colliderB))
 			{
-				m_MessageRouter.directMessage(colliderA, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderB)));
-				m_MessageRouter.directMessage(colliderB, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderA)));
+				m_BufferedEventService.directMessage(colliderA, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderB)));
+				m_BufferedEventService.directMessage(colliderB, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderA)));
 			}
 
 			itB ++;
@@ -108,6 +108,6 @@ void IntroState::draw(GameEngine* game)
 {
 	al_clear_to_color(al_map_rgb(255, 255, 255));
 
-	m_EntityPool.drawAll();
+	m_EntityManager.drawAll();
 }
 

@@ -11,6 +11,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 find_package(Allegro5 REQUIRED)
 include_directories(${ALLEGRO_INCLUDE_DIRS})
+include_directories("${CMAKE_SOURCE_DIR}/include")
 
 add_subdirectory (src)
 #add_subdirectory (test)

@@ -1,12 +1,12 @@
-#include "HookEntity.h"
+#include "pudge-wars/HookEntity.h"
 
-#include "HookableInterface.h"
+#include "pudge-wars/HookableInterface.h"
 
-#include "../core/GameConstants.h"
-#include "../core/GameException.h"
-#include "../core/MessageRouter.h"
-#include "../core/GameDebugWindow.h"
-#include "../core/CollisionChecker.h"
+#include "core/GameConstants.h"
+#include "core/GameException.h"
+#include "core/GameDebugWindow.h"
+#include "core/events/BufferedEventService.h"
+#include "core/helpers/CollisionHelper.h"
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
@@ -16,7 +16,7 @@
 
 HookEntity::HookEntity(int parentId, Vector2D position, double direction, double radius, double speed, double maxDistance)
 {
-	MessageRouter::Instance()->registerListener(this, EVENT_TYPE_ENTITY);
+	BufferedEventService::Instance()->registerListener(this, EVENT_TYPE_ENTITY);
 
 	m_Position.moveInDirection(radius, direction);
 
@@ -37,7 +37,7 @@ HookEntity::HookEntity(int parentId, Vector2D position, double direction, double
 
 HookEntity::~HookEntity()
 {
-	MessageRouter::Instance()->deregisterListener(this);
+	BufferedEventService::Instance()->deregisterListener(this);
 }
 
 EntityStatus HookEntity::update()
@@ -69,7 +69,7 @@ EntityStatus HookEntity::update()
 	m_DistanceCurrent += m_Speed;
 	m_Position.x += lengthdir_x(m_Speed, m_Direction);
 	m_Position.y += lengthdir_y(m_Speed, m_Direction);
-	MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
+	BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
 
 	return ENTITY_ALIVE;
 }
@@ -142,12 +142,12 @@ EntityStatus HookEntity::updateRetractingHook()
 		// If we don't have a tail, check if we're 
 		// close enough to the caster to be considered
 		// complete.
-		double moveDistance = m_Position.euclideanDist(m_CasterPosition) - m_CasterRadius;
-		if (moveDistance - m_Radius * 2 < m_Speed)
+		double moveDistance = m_Position.euclideanDist(m_CasterPosition) - m_CasterRadius * 4;
+		if (moveDistance - m_Radius  < m_Speed*2)
 		{
 			if (m_HookAttached)
 			{
-				MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_HOOK_DETACH, new EntityEventArgs(this)));
+				BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_HOOK_DETACH, new EntityEventArgs(this)));
 				m_HookAttached = false;
 			}
 		
@@ -212,7 +212,7 @@ void HookEntity::processEvent(const Event& event)
 			HookableInterface* hookableEntity = args->tryGetEntity<HookableInterface*>();
 			if (hookableEntity)
 			{
-				MessageRouter::Instance()->broadcast(Event(EVENT_TYPE_HOOK_ATTACH, new DoubleEntityPositionEventArgs(hookableEntity, this, m_Position)));
+				BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_HOOK_ATTACH, new DoubleEntityPositionEventArgs(hookableEntity, this, m_Position)));
 			
 				// Turn solid off, so the hook doesn't collide with anything else
 				m_HookAttached = true;
@@ -222,10 +222,10 @@ void HookEntity::processEvent(const Event& event)
 			}
 	
 			// Otherwise we're bouncing off the object
-			CollidableEntityInterface* entity = args->getEntity<CollidableEntityInterface*>();
+			EntityCollidable* entity = args->getEntity<EntityCollidable*>();
 
 			// Calculate new direction
-			m_Direction = CollisionChecker::calculateReflectAngle(entity, m_Position, m_Direction);
+			m_Direction = CollisionHelper::calculateReflectAngle(entity, m_Position, m_Direction);
 
 			// Update position
 			m_Position.x += lengthdir_x(m_Speed, m_Direction);

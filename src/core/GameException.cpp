@@ -1,4 +1,4 @@
-#include "GameException.h"
+#include "core/GameException.h"
 
 GameException::GameException(int exceptionId)
 {

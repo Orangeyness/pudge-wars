@@ -1,12 +1,12 @@
-#include "HookableInterface.h"
+#include "pudge-wars/HookableInterface.h"
 
-#include "../core/GameException.h"
-#include "../core/GameConstants.h"
-#include "../core/MessageRouter.h"
-#include "../core/Event.h"
+#include "core/GameException.h"
+#include "core/GameConstants.h"
+#include "core/events/BufferedEventService.h"
+#include "core/events/Event.h"
 
 HookableInterface::HookableInterface()
-	: m_HookObserver(*this)
+	: m_HookEventObserver(*this)
 {
 	m_HookEntityId = ENTITY_ID_NULL;
 }
@@ -31,18 +31,18 @@ void HookableInterface::attachSecondHookBehaviour(int currentHook, int newHook, 
 	attachHook(newHook, position);
 }
 
-HookableInterface::HookObserver::HookObserver(HookableInterface& parent)
+HookableInterface::HookEventObserver::HookEventObserver(HookableInterface& parent)
 	: m_Parent(parent) 
 {
-	MessageRouter::Instance()->registerListener(this, EVENT_TYPE_ENTITY);
+	BufferedEventService::Instance()->registerListener(this, EVENT_TYPE_ENTITY);
 }
 
-HookableInterface::HookObserver::~HookObserver()
+HookableInterface::HookEventObserver::~HookEventObserver()
 {
-	MessageRouter::Instance()->deregisterListener(this);
+	BufferedEventService::Instance()->deregisterListener(this);
 }
 
-void HookableInterface::HookObserver::processEvent(const Event& event)
+void HookableInterface::HookEventObserver::processEvent(const Event& event)
 {
 	// All entity events should have EntityEventArg type or a descent
 	EntityEventArgs* args = event.getArgs<EntityEventArgs*>();

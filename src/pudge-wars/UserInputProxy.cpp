@@ -1,4 +1,4 @@
-#include "UserInputProxy.h"
+#include "pudge-wars/UserInputProxy.h"
 
 UserInputProxy::UserInputProxy()
 {

@@ -1,4 +1,4 @@
-#include "GameConstants.h"
+#include "core/GameConstants.h"
 
 #include <sstream>
 #include <iomanip>
