@@ -14,7 +14,7 @@ class IntroState : public GameStateInterface, public EventObserver
 	private:
 		UserInputProxy m_UserInput;
 		EntityManager m_EntityManager;
-		BufferedEventService m_BufferedEventService;
+		BufferedEventService m_Events;
 
 		void detectCollisions();
 	public:

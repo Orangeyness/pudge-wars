@@ -2,7 +2,7 @@
 
 #include "core/GameException.h"
 #include "core/GameConstants.h"
-#include "core/events/BufferedEventService.h"
+#include "core/services/ServiceLocator.h"
 #include "core/events/Event.h"
 
 HookableInterface::HookableInterface()
@@ -34,12 +34,12 @@ void HookableInterface::attachSecondHookBehaviour(int currentHook, int newHook, 
 HookableInterface::HookEventObserver::HookEventObserver(HookableInterface& parent)
 	: m_Parent(parent) 
 {
-	BufferedEventService::Instance()->registerListener(this, EVENT_TYPE_ENTITY);
+	ServiceLocator::GetEventService()->addListener(this, EVENT_TYPE_ENTITY);
 }
 
 HookableInterface::HookEventObserver::~HookEventObserver()
 {
-	BufferedEventService::Instance()->deregisterListener(this);
+	ServiceLocator::GetEventService()->removeListener(this);
 }
 
 void HookableInterface::HookEventObserver::processEvent(const Event& event)

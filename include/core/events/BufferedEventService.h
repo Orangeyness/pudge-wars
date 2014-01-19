@@ -1,6 +1,7 @@
 #ifndef H_BUFFERED_EVENT_SERVICE_
 #define H_BUFFERED_EVENT_SERVICE_
 
+#include "core/services/EventService.h"
 #include "core/events/EventObserver.h"
 #include "core/entities/Entity.h"
 
@@ -9,7 +10,7 @@
 #include <forward_list>
 #include <utility>
 
-class BufferedEventService
+class BufferedEventService : public EventService
 {
 	protected:
 		std::list<Event> m_BroadcastEvents;
@@ -20,17 +21,13 @@ class BufferedEventService
 		BufferedEventService();
 		~BufferedEventService();
 
-		void registerListener(EventObserver* listener);
-		void registerListener(EventObserver* listener, EventType typeMask);
-		void deregisterListener(EventObserver* listener);
-
-		void broadcast(const Event& event);
-		void directMessage(EventObserver* recipant, const Event& event);
+		virtual void addListener(EventObserver* listener);
+		virtual void addListener(EventObserver* listener, EventType typeMask);
+		virtual void removeListener(EventObserver* listener);
+		virtual void broadcast(const Event& event);
+		virtual void directMessage(EventObserver* recipant, const Event& event);
 	
 		void doRoute();
-		
-		static BufferedEventService* Instance();
 };
-
 
 #endif

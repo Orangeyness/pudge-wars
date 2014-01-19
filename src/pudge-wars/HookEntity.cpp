@@ -5,7 +5,7 @@
 #include "core/GameConstants.h"
 #include "core/GameException.h"
 #include "core/GameDebugWindow.h"
-#include "core/events/BufferedEventService.h"
+#include "core/services/ServiceLocator.h"
 #include "core/helpers/CollisionHelper.h"
 
 #include <allegro5/allegro.h>
@@ -16,7 +16,7 @@
 
 HookEntity::HookEntity(int parentId, Vector2D position, double direction, double radius, double speed, double maxDistance)
 {
-	BufferedEventService::Instance()->registerListener(this, EVENT_TYPE_ENTITY);
+	ServiceLocator::GetEventService()->addListener(this, EVENT_TYPE_ENTITY);
 
 	m_Position.moveInDirection(radius, direction);
 
@@ -37,7 +37,7 @@ HookEntity::HookEntity(int parentId, Vector2D position, double direction, double
 
 HookEntity::~HookEntity()
 {
-	BufferedEventService::Instance()->deregisterListener(this);
+	ServiceLocator::GetEventService()->removeListener(this);
 }
 
 EntityStatus HookEntity::update()
@@ -69,7 +69,7 @@ EntityStatus HookEntity::update()
 	m_DistanceCurrent += m_Speed;
 	m_Position.x += lengthdir_x(m_Speed, m_Direction);
 	m_Position.y += lengthdir_y(m_Speed, m_Direction);
-	BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
+	ServiceLocator::GetEventService()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
 
 	return ENTITY_ALIVE;
 }
@@ -147,7 +147,7 @@ EntityStatus HookEntity::updateRetractingHook()
 		{
 			if (m_HookAttached)
 			{
-				BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_HOOK_DETACH, new EntityEventArgs(this)));
+				ServiceLocator::GetEventService()->broadcast(Event(EVENT_TYPE_HOOK_DETACH, new EntityEventArgs(this)));
 				m_HookAttached = false;
 			}
 		
@@ -212,7 +212,7 @@ void HookEntity::processEvent(const Event& event)
 			HookableInterface* hookableEntity = args->tryGetEntity<HookableInterface*>();
 			if (hookableEntity)
 			{
-				BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_HOOK_ATTACH, new DoubleEntityPositionEventArgs(hookableEntity, this, m_Position)));
+				ServiceLocator::GetEventService()->broadcast(Event(EVENT_TYPE_HOOK_ATTACH, new DoubleEntityPositionEventArgs(hookableEntity, this, m_Position)));
 			
 				// Turn solid off, so the hook doesn't collide with anything else
 				m_HookAttached = true;

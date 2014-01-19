@@ -3,6 +3,7 @@ set(ENGINE_FILES
 	GameConstants.cpp
 	GameException.cpp 
 	GameDebugWindow.cpp
+	services/ServiceLocator.cpp
 	events/Event.cpp
 	events/EventArgs.cpp
 	events/BufferedEventService.cpp

@@ -26,6 +26,11 @@
 #define EXCEP_EVENT_WRONG_TYPE			0x02000030
 #define EXCEP_EVENT_WRONG_ARGTYPE		0x02000031
 
+// Service Problems
+#define EXCEP_SERVICE_EXISTS			0x03000010
+#define EXCEP_SERVICE_NONEXISTANT		0x03000011
+#define EXCEP_SERVICE_NOT_IN_USE		0x03000012
+
 /******************* EVENTS **********************/
 
 #define EVENT_TYPE_ALL					0xFFFFFFFF
@@ -34,9 +39,8 @@
 #define EVENT_TYPE_SPAWN_HOOK			0x20000001
 #define EVENT_TYPE_ENTITY				0x4000FFFF
 #define EVENT_TYPE_ENTITY_MOVE			0x40000001	/* Broadcasts (at least) EntityPositionEventArgs, the entity that moved and its new position. */
-#define EVENT_TYPE_HOOK_ATTACH			0x40001000 	/* Broadcasts DoubleEntityEventArgs, first entity the hooked, second entity the hook. */
+#define EVENT_TYPE_HOOK_ATTACH			0x40001000 	/* Broadcasts DoubleEntityPositionEventArgs, first entity the hooked, second entity the hook. */
 #define EVENT_TYPE_HOOK_DETACH			0x40001001  /* Broadcasts EntityEventArgs, the entity is the now dettached hook. */
-
 
 /********* COLLISION IDENTIFIER TYPES ************/
 

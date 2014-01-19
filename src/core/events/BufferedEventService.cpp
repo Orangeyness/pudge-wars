@@ -3,42 +3,21 @@
 #include "core/GameException.h"
 #include "core/GameDebugWindow.h"
 
-#include <iostream>
+BufferedEventService::BufferedEventService() { }
 
-static BufferedEventService* _instance = NULL;
+BufferedEventService::~BufferedEventService() { }
 
-BufferedEventService* BufferedEventService::Instance()
-{
-	if (_instance == NULL)
-		THROW_GAME_EXCEPTION(EXCEP_MISSING_MESSAGE_ROUTER);
-
-	return _instance;
-}
-
-BufferedEventService::BufferedEventService()
-{
-	if (_instance != NULL)
-		THROW_GAME_EXCEPTION(EXCEP_MULTIPLE_MESSAGE_ROUTERS);
-
-	_instance = this;
-}
-
-BufferedEventService::~BufferedEventService()
-{
-	_instance = NULL;
-}
-
-void BufferedEventService::registerListener(EventObserver* listener)
+void BufferedEventService::addListener(EventObserver* listener)
 {
 	m_Listeners.emplace_front(listener, EVENT_TYPE_ALL);
 }
 
-void BufferedEventService::registerListener(EventObserver* listener, EventType typeMask)
+void BufferedEventService::addListener(EventObserver* listener, EventType typeMask)
 {
 	m_Listeners.emplace_front(listener, typeMask);
 }
 
-void BufferedEventService::deregisterListener(EventObserver* listener)
+void BufferedEventService::removeListener(EventObserver* listener)
 {
 	m_Listeners.remove_if(
 		[&listener](const std::pair<EventObserver*, EventType>& obj) { return (obj.first == listener); }

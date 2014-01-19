@@ -7,6 +7,7 @@
 #include "core/GameConstants.h"
 #include "core/GameDebugWindow.h"
 #include "core/GameException.h"
+#include "core/services/ServiceLocator.h"
 #include "core/helpers/GeometryHelper.h"
 #include "core/helpers/CollisionHelper.h"
 #include "core/events/Event.h"
@@ -16,7 +17,9 @@
 
 IntroState::IntroState()
 {
-	m_BufferedEventService.registerListener(this, EVENT_TYPE_SPAWN);
+	ServiceLocator::AddService(&m_Events);
+
+	m_Events.addListener(this, EVENT_TYPE_SPAWN);
 
 	m_EntityManager.add(new PudgeEntity(&m_UserInput));
 	m_EntityManager.add(new BallEntity(Vector2D(350, 300), 15));
@@ -26,8 +29,9 @@ IntroState::IntroState()
 IntroState::~IntroState()
 {
 	m_EntityManager.clean();
+	m_Events.removeListener(this);
 
-	m_BufferedEventService.deregisterListener(this);
+	ServiceLocator::RemoveService(&m_Events);
 }
 
 void IntroState::pause() { }
@@ -66,7 +70,7 @@ void IntroState::update(GameEngine* game)
 	detectCollisions();
 	
 	// Route messages from this frame
-	m_BufferedEventService.doRoute();
+	m_Events.doRoute();
 
 	// Delete dead entities
 	m_EntityManager.deleteDead();
@@ -93,8 +97,8 @@ void IntroState::detectCollisions()
 	
 			if (CollisionHelper::isColliding(colliderA, colliderB))
 			{
-				m_BufferedEventService.directMessage(colliderA, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderB)));
-				m_BufferedEventService.directMessage(colliderB, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderA)));
+				m_Events.directMessage(colliderA, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderB)));
+				m_Events.directMessage(colliderB, Event(EVENT_TYPE_COLLISION, new EntityEventArgs(colliderA)));
 			}
 
 			itB ++;

@@ -2,14 +2,13 @@
 
 #include "core/GameConstants.h"
 #include "core/GameException.h"
-#include "core/events/BufferedEventService.h"
+#include "core/services/ServiceLocator.h"
 #include "core/helpers/GeometryHelper.h"
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 
 #include <algorithm>
-#include <iostream>
 
 PudgeEntity::PudgeEntity(InputProxyInterface* input) 
 {
@@ -31,8 +30,6 @@ PudgeEntity::PudgeEntity(InputProxyInterface* input)
 	m_HookRecoveryTime = 40;
 	m_HookRecoveryTimeLeft = 0;
 }
-
-#include <iostream>
 
 EntityStatus PudgeEntity::update()
 {
@@ -94,7 +91,7 @@ EntityStatus PudgeEntity::update()
 
 	if (m_HookActive && m_DirectionCurrent == m_DirectionTarget)
 	{
-		BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_SPAWN_HOOK, new EntityEventArgs(this)));
+		ServiceLocator::GetEventService()->broadcast(Event(EVENT_TYPE_SPAWN_HOOK, new EntityEventArgs(this)));
 
 		m_HookActive = false;
 		m_HookRecoveryTimeLeft = m_HookRecoveryTime;
@@ -108,7 +105,7 @@ EntityStatus PudgeEntity::update()
 		m_Position.x += lengthdir_x(m_SpeedCurrent, m_DirectionCurrent);
 		m_Position.y += lengthdir_y(m_SpeedCurrent, m_DirectionCurrent);
 
-		BufferedEventService::Instance()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
+		ServiceLocator::GetEventService()->broadcast(Event(EVENT_TYPE_ENTITY_MOVE, new EntityPositionEventArgs(this, m_Position)));
 	}
 		
 	return ENTITY_ALIVE;
