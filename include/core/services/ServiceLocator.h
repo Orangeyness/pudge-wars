@@ -14,7 +14,10 @@ class ServiceLocator
 		static void RemoveService(GameDataService* service);
 
 		static EventService* GetEventService();
+		static EventService* TryGetEventService();
+
 		static GameDataService* GetGameDataService();
+		static GameDataService* TryGetGameDataService();
 
 };
 

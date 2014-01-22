@@ -124,6 +124,16 @@ Vector2D Vector2D::operator -(const Vector2D& rhs) const
 	return Vector2D(x - rhs.x, y - rhs.y);
 }
 
+Vector2D Vector2D::operator *(double rhs) const
+{
+	return Vector2D(x * rhs, y * rhs);
+}
+
+Vector2D Vector2D::operator /(double rhs) const
+{
+	return Vector2D(x / rhs, y / rhs);
+}
+
 Vector2D& Vector2D::operator +=(const Vector2D& rhs)
 {
 	x += rhs.x;
@@ -215,12 +225,12 @@ double Rect::area() const
 
 double Rect::top() const
 {
-	return y + height;
+	return y;
 }
 
 double Rect::bot() const
 {
-	return y;
+	return y + height;
 }
 
 double Rect::left() const
@@ -231,6 +241,11 @@ double Rect::left() const
 double Rect::right() const
 {
 	return x + width;
+}
+
+Vector2D Rect::size() const
+{
+	return Vector2D(width, height);
 }
 
 Vector2D Rect::center() const

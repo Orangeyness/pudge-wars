@@ -46,7 +46,7 @@ class PudgeEntity : public virtual EntityRadial, public virtual HookableInterfac
 		PudgeEntity(InputProxyInterface* input, double x, double y);
 		~PudgeEntity();
 		virtual EntityStatus update();
-		virtual void draw();
+		virtual void draw(Rect viewWindow);
 		virtual void processEvent(const Event& event);
 
 		virtual void moveToHook(const Vector2D& hookPosition);

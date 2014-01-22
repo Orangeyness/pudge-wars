@@ -95,19 +95,21 @@ void PudgeEntity::updatePosition()
 	}
 }
 
-void PudgeEntity::draw()
+void PudgeEntity::draw(Rect viewWindow)
 {
-	al_draw_filled_circle(m_Position.x, m_Position.y, m_Radius, al_map_rgb(0, 0, 250));
+	Vector2D viewPosition = m_Position - Vector2D(viewWindow.left(), viewWindow.top());
+	
+	al_draw_filled_circle( viewPosition.x, viewPosition.y, m_Radius, al_map_rgb(0, 0, 250));
 
-	al_draw_line(	m_Position.x, m_Position.y, 
-					m_Position.x + lengthdir_x(m_Radius * 1.2, m_DirectionCurrent),
-					m_Position.y + lengthdir_y(m_Radius * 1.2, m_DirectionCurrent),
+	al_draw_line(	viewPosition.x, viewPosition.y, 
+					viewPosition.x + lengthdir_x(m_Radius * 1.2, m_DirectionCurrent),
+					viewPosition.y + lengthdir_y(m_Radius * 1.2, m_DirectionCurrent),
 					al_map_rgb(125, 0, 0), 3
 				);
 
-	al_draw_line(	m_Position.x, m_Position.y, 
-					m_Position.x + lengthdir_x(m_Radius * 1.2, m_DirectionTarget),
-					m_Position.y + lengthdir_y(m_Radius * 1.2, m_DirectionTarget),
+	al_draw_line(	viewPosition.x, viewPosition.y, 
+					viewPosition.x + lengthdir_x(m_Radius * 1.2, m_DirectionTarget),
+					viewPosition.y + lengthdir_y(m_Radius * 1.2, m_DirectionTarget),
 					al_map_rgb(0, 125, 0), 3
 				);
 }

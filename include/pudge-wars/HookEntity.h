@@ -27,7 +27,7 @@ class HookEntity : public EntityRadial
 		~HookEntity();
 	
 		virtual EntityStatus update();
-		virtual void draw();
+		virtual void draw(Rect viewWindow);
 		virtual void processEvent(const Event& event);
 };
 

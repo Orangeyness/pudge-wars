@@ -9,7 +9,7 @@ class WallEntity : public EntityBoundingBox
 	public:
 		WallEntity(Vector2D position, double width, double height);
 		
-		virtual void draw();
+		virtual void draw(Rect viewWindow);
 
 };
 

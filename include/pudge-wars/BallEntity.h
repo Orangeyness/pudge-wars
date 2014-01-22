@@ -14,7 +14,7 @@ class BallEntity : public EntityRadial,  public HookableInterface
 	public:
 		BallEntity(Vector2D position, double radius);
 		
-		virtual void draw();
+		virtual void draw(Rect viewWindow);
 		virtual void moveToHook(const Vector2D& hookPosition);
 		virtual void attachHook(int hookId, const Vector2D& hookPosition);
 		virtual void dettachHook();

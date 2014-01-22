@@ -76,14 +76,14 @@ void EntityManager::deleteDead()
 	}
 }
 
-void EntityManager::drawAll()
+void EntityManager::drawAll(Rect viewWindow)
 {
 	auto it = m_EntityList.begin();
 
 	while (it != m_EntityList.end())
 	{
 		Entity* currentEntity = *it;
-		currentEntity->draw();
+		currentEntity->draw(viewWindow);
 
 		it ++;
 	}

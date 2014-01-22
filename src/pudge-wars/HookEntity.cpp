@@ -20,6 +20,7 @@ HookEntity::HookEntity(int parentId, Vector2D position, double direction, double
 
 	m_Position.moveInDirection(radius, direction);
 
+	m_Radius = 4;
 	m_ParentId = parentId;
 	m_Position = position;
 	m_Direction = direction;
@@ -166,30 +167,53 @@ EntityStatus HookEntity::updateRetractingHook()
 	return ENTITY_ALIVE;
 }
 
-void HookEntity::draw()
+void HookEntity::draw(Rect viewWindow)
 {
-	al_draw_filled_circle(m_Position.x, m_Position.y, 5, al_map_rgb(0, 250, 0));
+	al_draw_filled_circle(
+		m_Position.x - viewWindow.left(), 
+		m_Position.y - viewWindow.top(), 
+		m_Radius, al_map_rgb(0, 250, 0));
 
 	if (!m_TailList.empty())
 	{
 		auto nextIter = m_TailList.begin();
 		auto currentIter = nextIter++;
 
-		al_draw_line(currentIter->x, currentIter->y, m_CasterPosition.x, m_CasterPosition.y, al_map_rgb(0, 200, 0), 1);
+		al_draw_line(
+			currentIter->x - viewWindow.left(), 
+			currentIter->y - viewWindow.top(), 
+			m_CasterPosition.x - viewWindow.left(), 
+			m_CasterPosition.y - viewWindow.top(), 
+			al_map_rgb(0, 200, 0), 1);
 
 		// Update all but last point position
 		while (nextIter != m_TailList.end())
 		{
-			al_draw_line(currentIter->x, currentIter->y, nextIter->x, nextIter->y, al_map_rgb(0, 200, 0), 1);
+			al_draw_line(
+				currentIter->x - viewWindow.left(), 
+				currentIter->y - viewWindow.top(), 
+				nextIter->x - viewWindow.left(), 
+				nextIter->y - viewWindow.top(), 
+				al_map_rgb(0, 200, 0), 1);
 
 			currentIter = nextIter ++;
 		}
 
-		al_draw_line(currentIter->x, currentIter->y, m_Position.x, m_Position.y, al_map_rgb(0, 200, 0), 1);
+		al_draw_line(
+			currentIter->x - viewWindow.left(), 
+			currentIter->y - viewWindow.top(), 
+			m_Position.x - viewWindow.left(), 
+			m_Position.y - viewWindow.top(), 
+			al_map_rgb(0, 200, 0), 1);
 	}
 	else
 	{	
-		al_draw_line(m_CasterPosition.x, m_CasterPosition.y, m_Position.x, m_Position.y, al_map_rgb(0, 200, 0), 1);
+		al_draw_line(
+			m_CasterPosition.x - viewWindow.left(), 
+			m_CasterPosition.y - viewWindow.top(), 
+			m_Position.x - viewWindow.left(), 
+			m_Position.y - viewWindow.top(), 
+			al_map_rgb(0, 200, 0), 1);
 	}
 }
 

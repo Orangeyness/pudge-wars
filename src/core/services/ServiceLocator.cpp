@@ -32,6 +32,10 @@
 				THROW_GAME_EXCEPTION(EXCEP_SERVICE_NONEXISTANT);	\
 																	\
 			return _registered##ServiceType;						\
+		}															\
+		ServiceType * ServiceLocator::TryGet##ServiceType()			\
+		{															\
+			return _registered##ServiceType;						\
 		}
 		
 SERVICE_ADD(EventService);

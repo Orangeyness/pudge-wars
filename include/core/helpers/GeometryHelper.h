@@ -49,6 +49,8 @@ class Vector2D
 
 		Vector2D operator -(const Vector2D& rhs) const;
 		Vector2D operator +(const Vector2D& rhs) const;
+		Vector2D operator /(double rhs) const;
+		Vector2D operator *(double rhs) const;
 		Vector2D& operator +=(const Vector2D& rhs);
 		Vector2D& operator -=(const Vector2D& rhs);
 };
@@ -67,6 +69,7 @@ class Rect
 		void position(const Vector2D& point, double offsetX, double offsetY);
 		void position(const Vector2D& point, const Vector2D& offset);
 
+		Vector2D size() const;
 		Vector2D center() const;
 		double area() const;
 

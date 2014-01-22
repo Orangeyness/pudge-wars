@@ -12,9 +12,11 @@ WallEntity::WallEntity(Vector2D position, double width, double height)
 	updateBoundingBoxSize(width, height);
 }
 
-void WallEntity::draw()
+void WallEntity::draw(Rect viewWindow)
 {
 	Rect boundingBox = getBoundingBox();
+	boundingBox.x -= viewWindow.left();
+	boundingBox.y -= viewWindow.top();
 
 	al_draw_filled_rectangle(boundingBox.left(), boundingBox.top(), 
 		boundingBox.right(), boundingBox.bot(), al_map_rgb(200, 0, 0));

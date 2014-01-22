@@ -8,14 +8,16 @@
 #include "core/events/BufferedEventService.h"
 #include "core/events/EventObserver.h"
 #include "pudge-wars/UserInputProxy.h"
+#include "pudge-wars/ViewPort.h"
 
 class IntroState : public GameStateInterface, public EventObserver
 {
 	private:
+		BufferedEventService m_Events;
 		UserInputProxy m_UserInput;
 		UserInputProxy m_Temp;
 		EntityManager m_EntityManager;
-		BufferedEventService m_Events;
+		ViewPort m_ViewPort;
 
 		void detectCollisions();
 	public:

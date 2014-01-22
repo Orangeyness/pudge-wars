@@ -3,6 +3,7 @@
 
 #include "core/GameConstants.h"
 #include "core/GameException.h"
+#include "core/helpers/GeometryHelper.h"
 
 typedef bool EntityStatus;
 
@@ -18,7 +19,7 @@ class Entity
 	public:
 		Entity();
 		virtual EntityStatus update();
-		virtual void draw() = 0;
+		virtual void draw(Rect viewWindow) = 0;
 		virtual ~Entity();
 
 		virtual int id();

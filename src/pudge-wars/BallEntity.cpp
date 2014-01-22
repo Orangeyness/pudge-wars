@@ -13,9 +13,12 @@ BallEntity::BallEntity(Vector2D position, double radius)
 	addCollisionGroup(COLLISION_GROUP_HOOKABLE);
 }
 
-void BallEntity::draw()
+void BallEntity::draw(Rect viewWindow)
 {
-	al_draw_filled_circle(m_Position.x, m_Position.y, m_Radius, al_map_rgb(250, 0, 0));
+	al_draw_filled_circle(
+		m_Position.x - viewWindow.left(), 
+		m_Position.y - viewWindow.top(), 
+		m_Radius, al_map_rgb(250, 0, 0));
 }
 
 void BallEntity::moveToHook(const Vector2D& hookPosition)

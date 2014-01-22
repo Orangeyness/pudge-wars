@@ -25,7 +25,7 @@ class EntityManager
 		std::unordered_map<int, EntityCollidable*>::const_iterator collidableEnd();
 
 		int updateAll();
-		void drawAll();
+		void drawAll(Rect viewWindow);
 		void deleteDead();
 		void clean();
 

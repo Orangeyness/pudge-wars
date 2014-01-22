@@ -2,12 +2,13 @@ include_directories("${CMAKE_SOURCE_DIR}/include/pudge-wars")
 
 set(GAME_FILES 
 	IntroState.cpp 
-	PudgeEntity.cpp 
+	ViewPort.cpp
 	UserInputProxy.cpp
+	HookableInterface.cpp
 	WallEntity.cpp
 	BallEntity.cpp
 	HookEntity.cpp
-	HookableInterface.cpp
+	PudgeEntity.cpp 
 	pudge-states/PudgeState.cpp
 	pudge-states/PudgeWalkState.cpp
 	pudge-states/PudgeHookThrowState.cpp
