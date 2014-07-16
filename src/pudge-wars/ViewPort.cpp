@@ -37,6 +37,11 @@ Rect ViewPort::get()
 	return m_View;
 }
 
+Vector2D ViewPort::position()
+{
+	return m_View.position();
+}
+
 void ViewPort::processEvent(const Event& event)
 {
 	EntityPositionEventArgs* args = event.getArgs<EntityPositionEventArgs*>();

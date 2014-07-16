@@ -14,9 +14,10 @@ class ViewPort : public EventObserver
 
 		void init(Entity* followEntity, const Vector2D& intialPosition, const Vector2D& mapSize);
 		void clean();
+		void processEvent(const Event& event);
 
 		Rect get();
-		void processEvent(const Event& event);
+		Vector2D position();
 
 	private:
 		Rect m_View;

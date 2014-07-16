@@ -6,7 +6,7 @@ UserInputProxy::UserInputProxy()
 	m_HasHookTarget = false;
 }
 
-void UserInputProxy::update(const ALLEGRO_KEYBOARD_STATE* keyboardState, const ALLEGRO_MOUSE_STATE* mouseState)
+void UserInputProxy::update(const ALLEGRO_KEYBOARD_STATE* keyboardState, const ALLEGRO_MOUSE_STATE* mouseState, const Vector2D& positionOffset)
 {
 	m_MoveDirection.set(0, 0);
 
@@ -39,6 +39,7 @@ void UserInputProxy::update(const ALLEGRO_KEYBOARD_STATE* keyboardState, const A
 	{
 		m_LeftMouseDown = true;
 		m_HookTarget.set(mouseState->x, mouseState->y);
+		m_HookTarget += positionOffset;
 	}
 		else if (m_LeftMouseDown)
 	{

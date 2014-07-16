@@ -3,13 +3,10 @@
 #include "core/GameDebugWindow.h"
 #include "core/services/ServiceLocator.h"
 
-GameEngine::GameEngine()
+GameEngine::GameEngine(EngineConfig* config)
 	: m_DataService(*this)
 {
-	ServiceLocator::AddService(&m_DataService);
-
-	// Settings
-	m_TargetFramesPerSecond = 60;
+	m_Config = config;
 	
 	// State
 	m_FrameCount = 0;
@@ -23,6 +20,9 @@ GameEngine::GameEngine()
 	m_Display = NULL;
 	m_EventQueue = NULL;
 	m_RedrawTimer = NULL;
+
+	//Register Services
+	ServiceLocator::AddService(&m_DataService);
 }
 
 GameEngine::~GameEngine()
@@ -54,6 +54,11 @@ void GameEngine::initialise()
 		THROW_GAME_EXCEPTION(EXCEP_ALLEG_FONT_FAILED);
 	}
 
+	if (!al_init_image_addon())
+	{
+		THROW_GAME_EXCEPTION(EXCEP_ALLEG_IMAGE_FAILED);
+	}
+
 	if (!al_install_keyboard())
 	{
 		THROW_GAME_EXCEPTION(EXCEP_ALLEG_KEYBOARD_FAILED);
@@ -72,15 +77,35 @@ void GameEngine::initialise()
 	al_set_new_display_option(ALLEGRO_VSYNC, 2, ALLEGRO_REQUIRE);
 	al_set_new_display_option(ALLEGRO_CAN_DRAW_INTO_BITMAP, 1, ALLEGRO_SUGGEST);
 
-	al_set_new_bitmap_flags(ALLEGRO_MAG_LINEAR | ALLEGRO_VIDEO_BITMAP);
+	int originalDisplayFlags = al_get_new_display_flags();
+	int displayFlags = 0;
+	if (m_Config->getFullscreen())
+	{
+		displayFlags = displayFlags | ALLEGRO_FULLSCREEN_WINDOW | ALLEGRO_NOFRAME;
+	}
 
-	m_Display = al_create_display(640, 480);
+	al_set_new_display_flags(displayFlags);
+	al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR | ALLEGRO_VIDEO_BITMAP);
+
+	if (m_Config->getResolutionWidth() < 0 || m_Config->getResolutionHeight() < 0)
+	{
+		ALLEGRO_DISPLAY_MODE largest_display_mode;
+		al_get_display_mode(al_get_num_display_modes() - 1, &largest_display_mode);
+
+		m_Config->setResolutionWidth(largest_display_mode.width);
+		m_Config->setResolutionHeight(largest_display_mode.height);
+
+		//std::cout << m_Config->getResolutionWidth() << " " << m_Config->getResolutionHeight() << endl;
+	}
+
+	m_Display = al_create_display(m_Config->getResolutionWidth(), m_Config->getResolutionHeight());
 	if (!m_Display)
 	{
 		THROW_GAME_EXCEPTION(EXCEP_ALLEG_DISPLAY_FAILED);
 	}
+	al_set_new_display_flags(originalDisplayFlags);
 
-	m_RedrawTimer = al_create_timer(ALLEGRO_BPS_TO_SECS(m_TargetFramesPerSecond));
+	m_RedrawTimer = al_create_timer(ALLEGRO_BPS_TO_SECS(m_Config->getFrameSpeed()));
 	if (!m_RedrawTimer)
 	{
 		THROW_GAME_EXCEPTION(EXCEP_ALLEG_TIMER_FAILED);

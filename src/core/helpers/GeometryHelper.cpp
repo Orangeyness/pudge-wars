@@ -243,6 +243,11 @@ double Rect::right() const
 	return x + width;
 }
 
+Vector2D Rect::position() const
+{
+	return Vector2D(x, y);
+}
+
 Vector2D Rect::size() const
 {
 	return Vector2D(width, height);

@@ -16,13 +16,12 @@ class UserInputProxy : public InputProxyInterface
 
 	public:
 		UserInputProxy();
-		void update(const ALLEGRO_KEYBOARD_STATE* keyboardState, const ALLEGRO_MOUSE_STATE* mouseState);
+		void update(const ALLEGRO_KEYBOARD_STATE* keyboardState, const ALLEGRO_MOUSE_STATE* mouseState, const Vector2D& positionOffset);
 
 		virtual bool hasMoveDirection();
 		virtual bool hasHookTarget();
 		virtual double moveDirection();
 		virtual Vector2D hookTarget();
 };
-
 
 #endif

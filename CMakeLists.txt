@@ -15,3 +15,5 @@ include_directories("${CMAKE_SOURCE_DIR}/include")
 
 add_subdirectory (src)
 #add_subdirectory (test)
+
+file(COPY ${CMAKE_SOURCE_DIR}/assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets/)

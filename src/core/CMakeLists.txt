@@ -1,8 +1,10 @@
 set(ENGINE_FILES 
 	GameEngine.cpp 
+	EngineConfig.cpp
 	GameConstants.cpp
 	GameException.cpp 
 	GameDebugWindow.cpp
+	assets/AssetManager.cpp
 	services/ServiceLocator.cpp
 	events/Event.cpp
 	events/EventArgs.cpp

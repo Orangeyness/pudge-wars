@@ -1,29 +1,19 @@
 #ifndef H_GAME_ENGINE_
 #define H_GAME_ENGINE_
 
+#include "core/EngineConfig.h"
 #include "core/GameStateInterface.h"
 #include "core/services/GameDataService.h"
-
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_image.h>
 
 #include <stack>
 
 class GameEngine
 {
 	private:
-		// Settings
-		int m_TargetFramesPerSecond;
-
-		// State
-		uint64_t m_FrameCount;
-		int m_FrameCountThisSecond;
-		double m_LastFrameRate;
-		double m_LastSecondTime;
-		bool m_GameActive;
-		std::stack<GameStateInterface*> m_StateStack;
-
-		// StateAccessor
+		// Global data handler
 		class DataService : public GameDataService
 		{
 			private:
@@ -34,6 +24,18 @@ class GameEngine
 				virtual int getScreenHeight();
 				virtual uint64_t getGameFrameCount();
 		} m_DataService;
+
+
+		// Settings
+		EngineConfig* m_Config;
+
+		// State
+		uint64_t m_FrameCount;
+		int m_FrameCountThisSecond;
+		double m_LastFrameRate;
+		double m_LastSecondTime;
+		bool m_GameActive;
+		std::stack<GameStateInterface*> m_StateStack;
 
 		// Allegro controls
 		ALLEGRO_DISPLAY* 		m_Display;
@@ -46,7 +48,7 @@ class GameEngine
 
 
 	public: 
-		GameEngine();
+		GameEngine(EngineConfig* config);
 		~GameEngine();
 
 		void initialise();

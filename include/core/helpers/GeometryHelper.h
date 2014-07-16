@@ -69,6 +69,7 @@ class Rect
 		void position(const Vector2D& point, double offsetX, double offsetY);
 		void position(const Vector2D& point, const Vector2D& offset);
 
+		Vector2D position() const;
 		Vector2D size() const;
 		Vector2D center() const;
 		double area() const;

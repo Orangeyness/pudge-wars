@@ -6,10 +6,25 @@
 
 #include "pudge-wars/IntroState.h"
 
+void attemptLoadConfigFile(EngineConfig& config, const char* filename)
+{
+	try 
+	{
+		config.load(filename);
+	}
+	catch(GameException& e)
+	{
+		std::cerr << e.what() << std::endl;
+		std::cerr << "Failed to load engine config file, using defaults." << std::endl;
+	}
+}
+
 int main(int argc, char* argv[])
 {
-	GameEngine engine;
+	EngineConfig config;
+	attemptLoadConfigFile(config, "assets/engine.ini");
 
+	GameEngine engine(&config);
 	try
 	{
 		engine.initialise();
